@@ -1,0 +1,26 @@
+.card-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px; /* Adjust as needed */
+    padding: 22px;
+    margin: 0 auto;
+}
+
+.custom-card {
+    width: 320px; /* Increased width */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.custom-card .card-header img {
+    width: 100%;
+    height: auto;
+}
+
+.custom-card .card-body {
+    padding: 16px;
+    text-align: center;
+}
