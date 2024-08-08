@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { CardModule } from "primeng/card";
 import { ButtonModule } from "primeng/button";
 import { MatCardModule } from "@angular/material/card";
