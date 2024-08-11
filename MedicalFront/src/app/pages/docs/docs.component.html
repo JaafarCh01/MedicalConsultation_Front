@@ -1,12 +1,11 @@
-<!-- Your page layout -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4 mt-24">
   <div class="col-span-full flex justify-end">
     <app-search></app-search>
   </div>
-  <app-docard></app-docard>
-  <app-docard></app-docard>
-  <app-docard></app-docard>
-  <app-docard></app-docard>
-  <app-docard></app-docard>
-  <app-docard></app-docard>
+  <app-docard
+    *ngFor="let card of cards"
+    [image]="card.image"
+    [name]="card.name"
+    [price]="card.price"
+  ></app-docard>
 </div>

@@ -1,12 +1,12 @@
 <div class="pt-40 max-w-xs mx-auto block rounded-lg bg-white shadow-secondary-1 dark:bg-surface-dark">
     <div class="relative overflow-hidden bg-cover bg-no-repeat" data-twe-ripple-init data-twe-ripple-color="light">
-      <img class="w-full h-48 object-cover rounded-t-lg" src="https://tecdn.b-cdn.net/img/new/standard/nature/186.jpg" alt="Dr. Example" />
+      <img class="w-full h-48 object-cover rounded-t-lg" [src]="image" alt="Dr. Example" />
       <a href="#!">
         <div class="absolute bottom-0 left-0 right-0 top-0 h-full w-full overflow-hidden bg-[hsla(0,0%,98%,0.15)] bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-100"></div>
       </a>
     </div>
     <div class="p-6 text-surface dark:text-white bg-slate-100">
-      <h5 class="mb-2 text-xl font-medium leading-tight">Dr. Jane Doe, Cardiologist</h5>
+      <h5 class="mb-2 text-xl font-medium leading-tight">{{name}}, Cardiologist</h5>
       
       <!-- Star Rating -->
       <div class="flex items-center mb-4">
@@ -29,7 +29,7 @@
       </div>
   
       <div class="mb-4 text-base font-semibold text-gray-700 dark:text-gray-400">
-        Price: $100 per consultation
+        Price: {{price}}
       </div>
       
       <button

@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-
+import { Component} from '@angular/core';
+import { Input } from '@angular/core';
 @Component({
   selector: 'app-docard',
   standalone: true,
@@ -8,5 +8,8 @@ import { Component } from '@angular/core';
   styleUrl: './docard.component.css'
 })
 export class DocardComponent {
+  @Input() image: string = '';
+  @Input() name: string = '';
+  @Input() price: string = '';
 
 }
