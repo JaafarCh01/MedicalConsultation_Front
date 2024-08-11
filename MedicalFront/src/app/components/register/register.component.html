@@ -1,41 +1,82 @@
-<div class="max-w-4xl mx-auto font-[sans-serif] p-6 mt-12">
-    <div class="text-center mb-16">
-    
-      <h4 class="text-gray-800 text-base font-semibold mt-6">Sign up into your account</h4>
+<div class="bg-gray-50 font-[sans-serif] min-h-screen flex flex-col items-center justify-center py-6 px-4">
+    <div class="max-w-md w-full p-8 rounded-2xl bg-white shadow">
+      <h2 class="text-gray-800 text-center text-2xl font-bold">Register</h2>
+  
+      <!-- Role Selection -->
+      <div *ngIf="!selectedRole">
+        <div class="text-gray-800 text-sm mb-2 block">Select your role:</div>
+        <div class="flex gap-4">
+          <button (click)="selectRole('doctor')" class="bg-blue-600 text-white py-2 px-4 rounded">Register as Doctor</button>
+          <button (click)="selectRole('patient')" class="bg-green-600 text-white py-2 px-4 rounded">Register as Patient</button>
+        </div>
+      </div>
+  
+      <!-- Doctor Registration Form -->
+      <form *ngIf="selectedRole === 'doctor'" (ngSubmit)="registerDoctor()">
+        <h3 class="text-gray-800 text-lg font-semibold">Doctor Registration</h3>
+        <div class="grid sm:grid-cols-2 gap-8">
+          <div>
+            <label class="text-gray-800 text-sm mb-2 block">First Name</label>
+            <input name="firstName" [(ngModel)]="doctor.firstName" type="text" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Enter first name" required />
+          </div>
+          <div>
+            <label class="text-gray-800 text-sm mb-2 block">Last Name</label>
+            <input name="lastName" [(ngModel)]="doctor.lastName" type="text" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Enter last name" required />
+          </div>
+          <div>
+            <label class="text-gray-800 text-sm mb-2 block">Email</label>
+            <input name="email" [(ngModel)]="doctor.email" type="email" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Enter email" required />
+          </div>
+          <div>
+            <label class="text-gray-800 text-sm mb-2 block">Specialty</label>
+            <input name="specialty" [(ngModel)]="doctor.specialty" type="text" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Enter specialty" required />
+          </div>
+          <div>
+            <label class="text-gray-800 text-sm mb-2 block">Password</label>
+            <input name="password" [(ngModel)]="doctor.password" type="password" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Enter password" required />
+          </div>
+          <div>
+            <label class="text-gray-800 text-sm mb-2 block">Confirm Password</label>
+            <input name="confirmPassword" [(ngModel)]="doctor.confirmPassword" type="password" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Confirm password" required />
+          </div>
+        </div>
+        <button type="submit" class="w-full py-3 px-4 mt-6 text-white bg-blue-600 rounded-md">Register as Doctor</button>
+      </form>
+  
+      <!-- Patient Registration Form -->
+      <form *ngIf="selectedRole === 'patient'" (ngSubmit)="registerPatient()">
+        <h3 class="text-gray-800 text-lg font-semibold">Patient Registration</h3>
+        <div class="grid sm:grid-cols-2 gap-8">
+          <div>
+            <label class="text-gray-800 text-sm mb-2 block">First Name</label>
+            <input name="firstName" [(ngModel)]="patient.firstName" type="text" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Enter first name" required />
+          </div>
+          <div>
+            <label class="text-gray-800 text-sm mb-2 block">Last Name</label>
+            <input name="lastName" [(ngModel)]="patient.lastName" type="text" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Enter last name" required />
+          </div>
+          <div>
+            <label class="text-gray-800 text-sm mb-2 block">Email</label>
+            <input name="email" [(ngModel)]="patient.email" type="email" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Enter email" required />
+          </div>
+          <div>
+            <label class="text-gray-800 text-sm mb-2 block">Mobile No.</label>
+            <input name="mobile" [(ngModel)]="patient.mobile" type="text" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Enter mobile number" required />
+          </div>
+          <div>
+            <label class="text-gray-800 text-sm mb-2 block">Password</label>
+            <input name="password" [(ngModel)]="patient.password" type="password" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Enter password" required />
+          </div>
+          <div>
+            <label class="text-gray-800 text-sm mb-2 block">Confirm Password</label>
+            <input name="confirmPassword" [(ngModel)]="patient.confirmPassword" type="password" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Confirm password" required />
+          </div>
+        </div>
+        <button type="submit" class="w-full py-3 px-4 mt-6 text-white bg-green-600 rounded-md">Register as Patient</button>
+      </form>
+  
+      <!-- Link to Sign In -->
+      <p class="text-gray-800 text-sm mt-8 text-center">Already have an account? <a [routerLink]="['/sign-in']" class="text-blue-600 hover:underline ml-1">Sign in here</a></p>
     </div>
-
-    <form>
-      <div class="grid sm:grid-cols-2 gap-8">
-        <div>
-          <label class="text-gray-800 text-sm mb-2 block">First Name</label>
-          <input name="name" type="text" class="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all" placeholder="Enter name" />
-        </div>
-        <div>
-          <label class="text-gray-800 text-sm mb-2 block">Last Name</label>
-          <input name="lname" type="text" class="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all" placeholder="Enter last name" />
-        </div>
-        <div>
-          <label class="text-gray-800 text-sm mb-2 block">Email Id</label>
-          <input name="email" type="text" class="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all" placeholder="Enter email" />
-        </div>
-        <div>
-          <label class="text-gray-800 text-sm mb-2 block">Mobile No.</label>
-          <input name="number" type="number" class="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all" placeholder="Enter mobile number" />
-        </div>
-        <div>
-          <label class="text-gray-800 text-sm mb-2 block">Password</label>
-          <input name="password" type="password" class="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all" placeholder="Enter password" />
-        </div>
-        <div>
-          <label class="text-gray-800 text-sm mb-2 block">Confirm Password</label>
-          <input name="cpassword" type="password" class="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all" placeholder="Enter confirm password" />
-        </div>
-      </div>
-
-      <div class="!mt-12">
-        <button type="button" class="py-3.5 px-7 text-sm font-semibold tracking-wider rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">
-          Sign up
-        </button>
-      </div>
-    </form>
   </div>
+  
