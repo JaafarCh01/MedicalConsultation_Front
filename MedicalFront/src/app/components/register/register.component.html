@@ -1,82 +1,237 @@
-<div class="bg-gray-50 font-[sans-serif] min-h-screen flex flex-col items-center justify-center py-6 px-4">
-    <div class="max-w-md w-full p-8 rounded-2xl bg-white shadow">
-      <h2 class="text-gray-800 text-center text-2xl font-bold">Register</h2>
-  
-      <!-- Role Selection -->
-      <div *ngIf="!selectedRole">
-        <div class="text-gray-800 text-sm mb-2 block">Select your role:</div>
-        <div class="flex gap-4">
-          <button (click)="selectRole('doctor')" class="bg-blue-600 text-white py-2 px-4 rounded">Register as Doctor</button>
-          <button (click)="selectRole('patient')" class="bg-green-600 text-white py-2 px-4 rounded">Register as Patient</button>
+<div
+    class="bg-gray-50 min-h-screen flex flex-col items-center justify-center py-6 px-4 sm:px-6 lg:px-8"
+>
+    <div class="max-w-md w-full bg-white shadow-md rounded-lg p-8">
+        <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">
+            Register
+        </h2>
+
+        <!-- Role Selection -->
+        <div *ngIf="!selectedRole" class="text-center mb-6">
+            <p class="text-gray-600 mb-4">Select your role:</p>
+            <div class="flex justify-center gap-4">
+                <button
+                    (click)="selectRole('doctor')"
+                    class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                >
+                    Register as Doctor
+                </button>
+                <button
+                    (click)="selectRole('patient')"
+                    class="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600"
+                >
+                    Register as Patient
+                </button>
+            </div>
         </div>
-      </div>
-  
-      <!-- Doctor Registration Form -->
-      <form *ngIf="selectedRole === 'doctor'" (ngSubmit)="registerDoctor()">
-        <h3 class="text-gray-800 text-lg font-semibold">Doctor Registration</h3>
-        <div class="grid sm:grid-cols-2 gap-8">
-          <div>
-            <label class="text-gray-800 text-sm mb-2 block">First Name</label>
-            <input name="firstName" [(ngModel)]="doctor.firstName" type="text" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Enter first name" required />
-          </div>
-          <div>
-            <label class="text-gray-800 text-sm mb-2 block">Last Name</label>
-            <input name="lastName" [(ngModel)]="doctor.lastName" type="text" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Enter last name" required />
-          </div>
-          <div>
-            <label class="text-gray-800 text-sm mb-2 block">Email</label>
-            <input name="email" [(ngModel)]="doctor.email" type="email" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Enter email" required />
-          </div>
-          <div>
-            <label class="text-gray-800 text-sm mb-2 block">Specialty</label>
-            <input name="specialty" [(ngModel)]="doctor.specialty" type="text" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Enter specialty" required />
-          </div>
-          <div>
-            <label class="text-gray-800 text-sm mb-2 block">Password</label>
-            <input name="password" [(ngModel)]="doctor.password" type="password" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Enter password" required />
-          </div>
-          <div>
-            <label class="text-gray-800 text-sm mb-2 block">Confirm Password</label>
-            <input name="confirmPassword" [(ngModel)]="doctor.confirmPassword" type="password" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Confirm password" required />
-          </div>
+
+        <!-- Debug: Show selectedRole -->
+        <div *ngIf="selectedRole" class="text-center mb-4">
+            <p class="text-gray-600">Selected role: {{ selectedRole }}</p>
         </div>
-        <button type="submit" class="w-full py-3 px-4 mt-6 text-white bg-blue-600 rounded-md">Register as Doctor</button>
-      </form>
-  
-      <!-- Patient Registration Form -->
-      <form *ngIf="selectedRole === 'patient'" (ngSubmit)="registerPatient()">
-        <h3 class="text-gray-800 text-lg font-semibold">Patient Registration</h3>
-        <div class="grid sm:grid-cols-2 gap-8">
-          <div>
-            <label class="text-gray-800 text-sm mb-2 block">First Name</label>
-            <input name="firstName" [(ngModel)]="patient.firstName" type="text" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Enter first name" required />
-          </div>
-          <div>
-            <label class="text-gray-800 text-sm mb-2 block">Last Name</label>
-            <input name="lastName" [(ngModel)]="patient.lastName" type="text" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Enter last name" required />
-          </div>
-          <div>
-            <label class="text-gray-800 text-sm mb-2 block">Email</label>
-            <input name="email" [(ngModel)]="patient.email" type="email" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Enter email" required />
-          </div>
-          <div>
-            <label class="text-gray-800 text-sm mb-2 block">Mobile No.</label>
-            <input name="mobile" [(ngModel)]="patient.mobile" type="text" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Enter mobile number" required />
-          </div>
-          <div>
-            <label class="text-gray-800 text-sm mb-2 block">Password</label>
-            <input name="password" [(ngModel)]="patient.password" type="password" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Enter password" required />
-          </div>
-          <div>
-            <label class="text-gray-800 text-sm mb-2 block">Confirm Password</label>
-            <input name="confirmPassword" [(ngModel)]="patient.confirmPassword" type="password" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Confirm password" required />
-          </div>
+
+        <!-- Doctor Registration Form -->
+        <form
+            *ngIf="selectedRole === 'doctor'"
+            [formGroup]="doctorForm"
+            (ngSubmit)="registerDoctor()"
+        >
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">
+                Doctor Registration
+            </h3>
+            <div class="grid gap-4">
+                <div>
+                    <label
+                        for="doctorFirstName"
+                        class="block text-sm font-medium text-gray-700"
+                        >First Name</label
+                    >
+                    <input
+                        id="doctorFirstName"
+                        type="text"
+                        formControlName="firstName"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="doctorLastName"
+                        class="block text-sm font-medium text-gray-700"
+                        >Last Name</label
+                    >
+                    <input
+                        id="doctorLastName"
+                        type="text"
+                        formControlName="lastName"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="doctorEmail"
+                        class="block text-sm font-medium text-gray-700"
+                        >Email</label
+                    >
+                    <input
+                        id="doctorEmail"
+                        type="email"
+                        formControlName="email"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="doctorPassword"
+                        class="block text-sm font-medium text-gray-700"
+                        >Password</label
+                    >
+                    <input
+                        id="doctorPassword"
+                        type="password"
+                        formControlName="password"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="doctorDateOfBirth"
+                        class="block text-sm font-medium text-gray-700"
+                        >Date of Birth</label
+                    >
+                    <input
+                        id="doctorDateOfBirth"
+                        type="date"
+                        formControlName="dateOfBirth"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="doctorCity"
+                        class="block text-sm font-medium text-gray-700"
+                        >City</label
+                    >
+                    <input
+                        id="doctorCity"
+                        type="text"
+                        formControlName="city"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                </div>
+            </div>
+            <button
+                type="submit"
+                class="w-full mt-6 py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                [disabled]="doctorForm.invalid"
+            >
+                Register as Doctor
+            </button>
+        </form>
+
+        <!-- Patient Registration Form -->
+        <form
+            *ngIf="selectedRole === 'patient'"
+            [formGroup]="patientForm"
+            (ngSubmit)="registerPatient()"
+        >
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">
+                Patient Registration
+            </h3>
+            <div class="grid gap-4">
+                <div>
+                    <label
+                        for="patientFirstName"
+                        class="block text-sm font-medium text-gray-700"
+                        >First Name</label
+                    >
+                    <input
+                        id="patientFirstName"
+                        type="text"
+                        formControlName="firstName"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="patientLastName"
+                        class="block text-sm font-medium text-gray-700"
+                        >Last Name</label
+                    >
+                    <input
+                        id="patientLastName"
+                        type="text"
+                        formControlName="lastName"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="patientEmail"
+                        class="block text-sm font-medium text-gray-700"
+                        >Email</label
+                    >
+                    <input
+                        id="patientEmail"
+                        type="email"
+                        formControlName="email"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="patientPassword"
+                        class="block text-sm font-medium text-gray-700"
+                        >Password</label
+                    >
+                    <input
+                        id="patientPassword"
+                        type="password"
+                        formControlName="password"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="patientDateOfBirth"
+                        class="block text-sm font-medium text-gray-700"
+                        >Date of Birth</label
+                    >
+                    <input
+                        id="patientDateOfBirth"
+                        type="date"
+                        formControlName="dateOfBirth"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="patientCity"
+                        class="block text-sm font-medium text-gray-700"
+                        >City</label
+                    >
+                    <input
+                        id="patientCity"
+                        type="text"
+                        formControlName="city"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                    />
+                </div>
+            </div>
+            <button
+                type="submit"
+                class="w-full mt-6 py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600"
+                [disabled]="patientForm.invalid"
+            >
+                Register as Patient
+            </button>
+        </form>
+
+        <!-- Success Message -->
+        <div
+            *ngIf="registrationSuccess"
+            class="mt-6 text-center text-green-600"
+        >
+            <p>{{ registrationSuccess }}</p>
         </div>
-        <button type="submit" class="w-full py-3 px-4 mt-6 text-white bg-green-600 rounded-md">Register as Patient</button>
-      </form>
-  
-      <!-- Link to Sign In -->
-      <p class="text-gray-800 text-sm mt-8 text-center">Already have an account? <a [routerLink]="['/sign-in']" class="text-blue-600 hover:underline ml-1">Sign in here</a></p>
     </div>
-  </div>
-  
+</div>

@@ -1,49 +1,92 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Component } from "@angular/core";
+import { Router } from "@angular/router";
+import { CommonModule } from "@angular/common";
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
+import { RegistrationService } from "../../services/RegistrationService";
+import { RegistrationRequest } from "../../models/registration-request.model"; // Ensure the correct path
 
 @Component({
-  selector: 'app-register',
+  selector: "app-register",
   standalone: true,
-  imports: [ RouterModule , CommonModule, FormsModule],
-  templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  imports: [FormsModule, ReactiveFormsModule, CommonModule],
+  templateUrl: "./register.component.html",
+  styleUrls: ["./register.component.css"],
 })
 export class RegisterComponent {
-
   selectedRole: string | null = null;
-  doctor = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    specialty: '',
-    password: '',
-    confirmPassword: ''
-  };
-  patient = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    mobile: '',
-    password: '',
-    confirmPassword: ''
-  };
+  registrationSuccess: string | null = null;
 
-  constructor(private router: Router) {}
+  doctorForm: FormGroup;
+  patientForm: FormGroup;
+
+  constructor(
+    private router: Router,
+    private registrationService: RegistrationService,
+    private fb: FormBuilder,
+  ) {
+    this.doctorForm = this.fb.group({
+      firstName: ["", [Validators.required, Validators.minLength(1)]],
+      lastName: ["", [Validators.required, Validators.minLength(1)]],
+      email: ["", [Validators.required, Validators.email]],
+      password: ["", [Validators.required, Validators.minLength(8)]],
+      dateOfBirth: ["", [Validators.required]],
+      city: ["", [Validators.required]],
+    });
+
+    this.patientForm = this.fb.group({
+      firstName: ["", [Validators.required, Validators.minLength(1)]],
+      lastName: ["", [Validators.required, Validators.minLength(1)]],
+      email: ["", [Validators.required, Validators.email]],
+      password: ["", [Validators.required, Validators.minLength(8)]],
+      dateOfBirth: ["", [Validators.required]],
+      city: ["", [Validators.required]],
+    });
+  }
 
   selectRole(role: string) {
     this.selectedRole = role;
+    this.registrationSuccess = null; // Reset success message when selecting a role
   }
 
   registerDoctor() {
-    // Add logic for doctor registration
-    console.log('Doctor Registration', this.doctor);
+    if (this.doctorForm.valid) {
+      const registrationRequest: RegistrationRequest = this.doctorForm.value;
+      this.registrationService.registerDoctor(registrationRequest).subscribe({
+        next: (response) => {
+          console.log("Doctor registered successfully", response);
+          this.registrationSuccess = "Doctor registration complete!";
+          this.doctorForm.reset();
+        },
+        error: (error) => {
+          console.error("Error registering doctor", error);
+        },
+      });
+    } else {
+      console.log("Doctor form is invalid", this.doctorForm.errors);
+    }
   }
 
   registerPatient() {
-    // Add logic for patient registration
-    console.log('Patient Registration', this.patient);
+    if (this.patientForm.valid) {
+      const registrationRequest: RegistrationRequest = this.patientForm.value;
+      this.registrationService.registerPatient(registrationRequest).subscribe({
+        next: (response) => {
+          console.log("Patient registered successfully", response);
+          this.registrationSuccess = "Patient registration complete!";
+          this.patientForm.reset();
+        },
+        error: (error) => {
+          console.error("Error registering patient", error);
+        },
+      });
+    } else {
+      console.log("Patient form is invalid", this.patientForm.errors);
+    }
   }
 }
