@@ -9,7 +9,7 @@ import {
   Validators,
 } from "@angular/forms";
 import { RegistrationService } from "../../services/RegistrationService";
-import { RegistrationRequest } from "../../models/registration-request.model"; // Ensure the correct path
+import { RegistrationRequest } from "../../models/registration-request.model";
 
 @Component({
   selector: "app-register",
@@ -24,6 +24,7 @@ export class RegisterComponent {
 
   doctorForm: FormGroup;
   patientForm: FormGroup;
+  organizationForm: FormGroup;
 
   constructor(
     private router: Router,
@@ -46,6 +47,24 @@ export class RegisterComponent {
       password: ["", [Validators.required, Validators.minLength(8)]],
       dateOfBirth: ["", [Validators.required]],
       city: ["", [Validators.required]],
+    });
+
+    this.organizationForm = this.fb.group({
+      firstName: ["", [Validators.required, Validators.minLength(1)]],
+      lastName: ["", [Validators.required, Validators.minLength(1)]],
+      email: ["", [Validators.required, Validators.email]],
+      password: ["", [Validators.required, Validators.minLength(8)]],
+      dateOfBirth: ["", [Validators.required]],
+      city: ["", [Validators.required]],
+      organizationName: ["", [Validators.required]],
+      typeOfInstitution: ["", [Validators.required]],
+      description: [""],
+      facilityCity: ["", [Validators.required]],
+      facilityAddress: ["", [Validators.required]],
+      phoneNumber: ["", [Validators.required]],
+      schedule: [""],
+      website: [""],
+      facilityEmailAddress: ["", [Validators.required, Validators.email]]
     });
   }
 
@@ -87,6 +106,24 @@ export class RegisterComponent {
       });
     } else {
       console.log("Patient form is invalid", this.patientForm.errors);
+    }
+  }
+
+  registerOrganization() {
+    if (this.organizationForm.valid) {
+      const registrationRequest: RegistrationRequest = this.organizationForm.value;
+      this.registrationService.registerOrganization(registrationRequest).subscribe({
+        next: (response) => {
+          console.log("Organization registered successfully", response);
+          this.registrationSuccess = "Organization registration complete!";
+          this.organizationForm.reset();
+        },
+        error: (error) => {
+          console.error("Error registering organization", error);
+        },
+      });
+    } else {
+      console.log("Organization form is invalid", this.organizationForm.errors);
     }
   }
 }

@@ -22,6 +22,12 @@
                 >
                     Register as Patient
                 </button>
+                <button
+                    (click)="selectRole('organization')"
+                    class="bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                >
+                    Register as Organization
+                </button>
             </div>
         </div>
 
@@ -223,6 +229,220 @@
                 [disabled]="patientForm.invalid"
             >
                 Register as Patient
+            </button>
+        </form>
+
+        <!-- Organization Registration Form -->
+        <form
+            *ngIf="selectedRole === 'organization'"
+            [formGroup]="organizationForm"
+            (ngSubmit)="registerOrganization()"
+        >
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">
+                Organization Registration
+            </h3>
+            <div class="grid gap-4">
+                <div>
+                    <label
+                        for="orgFirstName"
+                        class="block text-sm font-medium text-gray-700"
+                        >First Name</label
+                    >
+                    <input
+                        id="orgFirstName"
+                        type="text"
+                        formControlName="firstName"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="orgLastName"
+                        class="block text-sm font-medium text-gray-700"
+                        >Last Name</label
+                    >
+                    <input
+                        id="orgLastName"
+                        type="text"
+                        formControlName="lastName"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="orgEmail"
+                        class="block text-sm font-medium text-gray-700"
+                        >Email</label
+                    >
+                    <input
+                        id="orgEmail"
+                        type="email"
+                        formControlName="email"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="orgPassword"
+                        class="block text-sm font-medium text-gray-700"
+                        >Password</label
+                    >
+                    <input
+                        id="orgPassword"
+                        type="password"
+                        formControlName="password"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="orgDateOfBirth"
+                        class="block text-sm font-medium text-gray-700"
+                        >Date of Birth</label
+                    >
+                    <input
+                        id="orgDateOfBirth"
+                        type="date"
+                        formControlName="dateOfBirth"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="orgCity"
+                        class="block text-sm font-medium text-gray-700"
+                        >City</label
+                    >
+                    <input
+                        id="orgCity"
+                        type="text"
+                        formControlName="city"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="orgName"
+                        class="block text-sm font-medium text-gray-700"
+                        >Organization Name</label
+                    >
+                    <input
+                        id="orgName"
+                        type="text"
+                        formControlName="organizationName"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="orgType"
+                        class="block text-sm font-medium text-gray-700"
+                        >Type of Institution</label
+                    >
+                    <input
+                        id="orgType"
+                        type="text"
+                        formControlName="typeOfInstitution"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="orgDescription"
+                        class="block text-sm font-medium text-gray-700"
+                        >Description</label
+                    >
+                    <textarea
+                        id="orgDescription"
+                        formControlName="description"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    ></textarea>
+                </div>
+                <div>
+                    <label
+                        for="orgFacilityCity"
+                        class="block text-sm font-medium text-gray-700"
+                        >Facility City</label
+                    >
+                    <input
+                        id="orgFacilityCity"
+                        type="text"
+                        formControlName="facilityCity"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="orgFacilityAddress"
+                        class="block text-sm font-medium text-gray-700"
+                        >Facility Address</label
+                    >
+                    <input
+                        id="orgFacilityAddress"
+                        type="text"
+                        formControlName="facilityAddress"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="orgPhoneNumber"
+                        class="block text-sm font-medium text-gray-700"
+                        >Phone Number</label
+                    >
+                    <input
+                        id="orgPhoneNumber"
+                        type="tel"
+                        formControlName="phoneNumber"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="orgSchedule"
+                        class="block text-sm font-medium text-gray-700"
+                        >Schedule</label
+                    >
+                    <input
+                        id="orgSchedule"
+                        type="text"
+                        formControlName="schedule"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="orgWebsite"
+                        class="block text-sm font-medium text-gray-700"
+                        >Website</label
+                    >
+                    <input
+                        id="orgWebsite"
+                        type="url"
+                        formControlName="website"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="orgFacilityEmail"
+                        class="block text-sm font-medium text-gray-700"
+                        >Facility Email Address</label
+                    >
+                    <input
+                        id="orgFacilityEmail"
+                        type="email"
+                        formControlName="facilityEmailAddress"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                </div>
+            </div>
+            <button
+                type="submit"
+                class="w-full mt-6 py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                [disabled]="organizationForm.invalid"
+            >
+                Register Organization
             </button>
         </form>
 

@@ -31,16 +31,24 @@ export class LoginComponent {
       this.authService.login(this.loginForm.value).subscribe({
         next: (response) => {
           console.log('Login successful', response);
-          // Navigate to home page or dashboard
-          this.router.navigate(['/']);
+          const role = this.authService.getUserRole();
+          switch (role) {
+            case 'DOCTOR':
+              this.router.navigate(['/doctor-dashboard']);
+              break;
+            case 'PATIENT':
+              this.router.navigate(['/patient-dashboard']);
+              break;
+            case 'ORGANIZATION':
+              this.router.navigate(['/organization-dashboard']);
+              break;
+            default:
+              this.router.navigate(['/']);
+          }
         },
         error: (error) => {
           console.error('Login error', error);
-          if (error.status === 403 && error.error === "User account is not enabled. Activation email has been sent.") {
-            this.errorMessage = "Your account is not activated. Please check your email for the activation link.";
-          } else {
-            this.errorMessage = error.error.message || 'An error occurred during login';
-          }
+          this.errorMessage = error.message || 'An error occurred during login';
         }
       });
     }
