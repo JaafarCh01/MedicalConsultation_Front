@@ -48,7 +48,13 @@ export class LoginComponent {
         },
         error: (error) => {
           console.error('Login error', error);
-          this.errorMessage = error.message || 'An error occurred during login';
+          if (error.status === 403) {
+            this.errorMessage = 'Your account is not activated. Please check your email for the activation link.';
+          } else if (error.status === 401) {
+            this.errorMessage = 'Invalid email or password. Please try again.';
+          } else {
+            this.errorMessage = 'An error occurred during login. Please try again later.';
+          }
         }
       });
     }
