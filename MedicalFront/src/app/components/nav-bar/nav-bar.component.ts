@@ -1,8 +1,9 @@
-import { Component } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { AuthService } from '../../services/authService';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Subscription } from "rxjs";
 import { Router } from '@angular/router';
 
 @Component({
@@ -12,20 +13,35 @@ import { Router } from '@angular/router';
   templateUrl: "./nav-bar.component.html",
   styleUrl: "./nav-bar.component.css",
 })
-export class NavBarComponent {
+export class NavBarComponent implements OnInit, OnDestroy {
+  isLoggedIn: boolean = false;
+  userName: string = '';
+  private authSubscription!: Subscription;
+
   constructor(public authService: AuthService, private router: Router) {}
 
-  isAuthenticated(): boolean {
-    return this.authService.isAuthenticated();
+  ngOnInit() {
+    this.authSubscription = this.authService.isAuthenticated$.subscribe(
+      (isAuthenticated) => {
+        this.isLoggedIn = isAuthenticated;
+        if (isAuthenticated) {
+          const user = this.authService.getCurrentUser();
+          this.userName = user && user.firstName ? `${user.firstName} ${user.lastName}` : 'User';
+        } else {
+          this.userName = '';
+        }
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
   }
 
   getUserRole(): string | null {
     return this.authService.getUserRole();
-  }
-
-  getUserName(): string {
-    const user = this.authService.getCurrentUser();
-    return user && user.firstName ? `${user.firstName} ${user.lastName}` : '';
   }
 
   logout(): void {

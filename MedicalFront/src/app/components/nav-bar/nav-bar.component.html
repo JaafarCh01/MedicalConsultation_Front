@@ -43,8 +43,8 @@
                 <a routerLink="/contact" class="text-sm font-semibold leading-6 text-gray-900">Contact</a>
             </div>
             <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-                <ng-container *ngIf="isAuthenticated(); else loginRegisterLinks">
-                    <span class="text-sm font-semibold leading-6 text-gray-900 mr-4">{{ getUserName() }}</span>
+                <ng-container *ngIf="isLoggedIn; else loginRegisterLinks">
+                    <span class="text-sm font-semibold leading-6 text-gray-900 mr-4">Welcome, {{ userName }}</span>
                     <a [routerLink]="getUserRole() + '-dashboard'" class="text-sm font-semibold leading-6 text-gray-900 mr-4">Dashboard</a>
                     <button (click)="logout()" class="text-sm font-semibold leading-6 text-gray-900 cursor-pointer">Logout</button>
                 </ng-container>

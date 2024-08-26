@@ -11,6 +11,7 @@ export class AuthService {
   private apiUrl = 'http://localhost:8088/api/v1/auth';
   private tokenKey = 'auth_token';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
+  public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
   private currentUserSubject = new BehaviorSubject<any>(null);
   public currentUser = this.currentUserSubject.asObservable();
 
@@ -22,22 +23,20 @@ export class AuthService {
   login(credentials: { email: string; password: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/authenticate`, credentials).pipe(
       tap((response: any) => {
-        if (response && response.token) {
+        if (response && response.token && response.user) {
           localStorage.setItem('token', response.token);
-          if (response.user) {
-            const user = {
-              role: response.user.role || 'UNKNOWN',
-              firstName: response.user.firstName || '',
-              lastName: response.user.lastName || ''
-            };
-            localStorage.setItem('userRole', user.role);
-            localStorage.setItem('user', JSON.stringify(user));
-            this.currentUserSubject.next(user);
-          } else {
-            console.error('User information not found in the response');
-          }
+          const user = {
+            role: response.user.role || 'UNKNOWN',
+            firstName: response.user.firstName || '',
+            lastName: response.user.lastName || '',
+            email: response.user.email || ''
+          };
+          localStorage.setItem('userRole', user.role);
+          localStorage.setItem('user', JSON.stringify(user));
+          this.currentUserSubject.next(user);
+          this.isAuthenticatedSubject.next(true);
         } else {
-          console.error('Token not found in the response');
+          console.error('Invalid response structure');
         }
       }),
       catchError(this.handleError)
