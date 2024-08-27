@@ -1,21 +1,34 @@
-<!-- Conteneur principal pour aligner les éléments -->
-<div class="relative">
-	<!-- Barre de recherche alignée à droite -->
-	<div class="absolute right-0 p-4">
-	  <form class="flex items-center space-x-1"> <!-- Added space-x-1 for a small gap -->
-		<div class="flex">
-		  <input type="text" placeholder="Search for the tool you like"
-				 class="w-80 px-3 h-10 rounded-l border-2 border-sky-500 focus:outline-none focus:border-sky-500">
-		  <button type="submit" class="text-white rounded-r px-3 py-1 bg-sky-500 hover:bg-sky-600">Search</button>
-		</div>
-		<select id="pricingType" name="pricingType"
-				class="h-10 border-2 border-sky-500 focus:outline-none focus:border-sky-500 text-sky-500 rounded px-3 py-1 tracking-wider">
-		  <option value="All" selected>All</option>
-		  <option value="Freemium">Cardiology</option>
-		  <option value="Free">Ass</option>
-		  <option value="Paid">Feet</option>
-		</select>
-	  </form>
-	</div>
+<div class="flex items-center justify-between mb-4">
+  <div class="flex-1 mr-4">
+    <input
+      type="text"
+      placeholder="Search for doctors or specialties"
+      class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      (input)="onSearch($event)"
+    >
   </div>
-  
+  <select
+    (change)="onFilter($event)"
+    class="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+  >
+    <option value="All">All Specialties</option>
+    <option value="Cardiology">Cardiology</option>
+    <option value="Dermatology">Dermatology</option>
+    <option value="Neurology">Neurology</option>
+    <option value="Pediatrics">Pediatrics</option>
+    <option value="Orthopedics">Orthopedics</option>
+    <option value="Psychiatry">Psychiatry</option>
+  </select>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  <app-docard
+    *ngFor="let card of filteredCards"
+    [image]="card.image"
+    [name]="card.name"
+    [price]="card.price"
+    [specialty]="card.specialty"
+  ></app-docard>
+</div>
+
+<!-- Implement pagination component here -->

@@ -1,45 +1,20 @@
-<div class="pt-40 max-w-xs mx-auto block rounded-lg bg-white shadow-secondary-1 dark:bg-surface-dark">
-    <div class="relative overflow-hidden bg-cover bg-no-repeat" data-twe-ripple-init data-twe-ripple-color="light">
-      <img class="w-full h-48 object-cover rounded-t-lg" [src]="image" alt="Dr. Example" />
-      <a href="#!">
-        <div class="absolute bottom-0 left-0 right-0 top-0 h-full w-full overflow-hidden bg-[hsla(0,0%,98%,0.15)] bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-100"></div>
-      </a>
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+  <img [src]="image" [alt]="name" class="w-full h-48 object-cover">
+  <div class="p-4">
+    <h3 class="text-xl font-semibold mb-2">{{name}}</h3>
+    <p class="text-gray-600 mb-2">{{specialty}}</p>
+    <div class="flex items-center mb-2">
+      <span class="text-yellow-500 mr-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+        </svg>
+      </span>
+      <span class="text-gray-600">4.8 (120 reviews)</span>
     </div>
-    <div class="p-6 text-surface dark:text-white bg-slate-100">
-      <h5 class="mb-2 text-xl font-medium leading-tight">{{name}}, Cardiologist</h5>
-      
-      <!-- Star Rating -->
-      <div class="flex items-center mb-4">
-        <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.21c.969 0 1.371 1.24.588 1.81l-3.41 2.487a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118L10 13.435l-3.412 2.487c-.784.57-1.839-.197-1.54-1.118l1.287-3.957a1 1 0 00-.364-1.118l-3.41-2.487c-.783-.57-.38-1.81.588-1.81h4.21a1 1 0 00.95-.69l1.287-3.957z"/>
-        </svg>
-        <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.21c.969 0 1.371 1.24.588 1.81l-3.41 2.487a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118L10 13.435l-3.412 2.487c-.784.57-1.839-.197-1.54-1.118l1.287-3.957a1 1 0 00-.364-1.118l-3.41-2.487c-.783-.57-.38-1.81.588-1.81h4.21a1 1 0 00.95-.69l1.287-3.957z"/>
-        </svg>
-        <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.21c.969 0 1.371 1.24.588 1.81l-3.41 2.487a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118L10 13.435l-3.412 2.487c-.784.57-1.839-.197-1.54-1.118l1.287-3.957a1 1 0 00-.364-1.118l-3.41-2.487c-.783-.57-.38-1.81.588-1.81h4.21a1 1 0 00.95-.69l1.287-3.957z"/>
-        </svg>
-        <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.21c.969 0 1.371 1.24.588 1.81l-3.41 2.487a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118L10 13.435l-3.412 2.487c-.784.57-1.839-.197-1.54-1.118l1.287-3.957a1 1 0 00-.364-1.118l-3.41-2.487c-.783-.57-.38-1.81.588-1.81h4.21a1 1 0 00.95-.69l1.287-3.957z"/>
-        </svg>
-        <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.21c.969 0 1.371 1.24.588 1.81l-3.41 2.487a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118L10 13.435l-3.412 2.487c-.784.57-1.839-.197-1.54-1.118l1.287-3.957a1 1 0 00-.364-1.118l-3.41-2.487c-.783-.57-.38-1.81.588-1.81h4.21a1 1 0 00.95-.69l1.287-3.957z"/>
-        </svg>
-        <span class="ml-2 text-sm text-gray-500 dark:text-gray-300">(5.0)</span>
-      </div>
-  
-      <div class="mb-4 text-base font-semibold text-gray-700 dark:text-gray-400">
-        Price: {{price}}
-      </div>
-      
-      <button
-  type="button"
-  class="inline-block rounded bg-custom-blue px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-custom-blue-accent hover:shadow-primary-2 focus:bg-custom-blue-accent focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-custom-blue-dark active:shadow-primary-2 dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong"
-  data-twe-ripple-init
-  data-twe-ripple-color="light">
-  Contact
-</button>
-
-    </div>
+    <p class="text-gray-800 font-semibold">{{price}}</p>
+    <button class="mt-4 w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">
+      Book Appointment
+    </button>
   </div>
+</div>
   

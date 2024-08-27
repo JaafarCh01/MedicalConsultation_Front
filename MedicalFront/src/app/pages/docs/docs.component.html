@@ -1,11 +1,21 @@
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4 mt-24">
-  <div class="col-span-full flex justify-end">
-    <app-search></app-search>
+<div class="container mx-auto px-4 py-8 mt-24">
+  <div class="mb-8">
+    <app-search (searchEvent)="onSearch($event)" (filterEvent)="onFilter($event)"></app-search>
   </div>
-  <app-docard
-    *ngFor="let card of cards"
-    [image]="card.image"
-    [name]="card.name"
-    [price]="card.price"
-  ></app-docard>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <app-docard
+      *ngFor="let card of filteredCards"
+      [image]="card.image"
+      [name]="card.name"
+      [price]="card.price"
+      [specialty]="card.specialty"
+    ></app-docard>
+  </div>
+  <div class="mt-8 flex justify-center">
+    <app-pagination
+      [currentPage]="currentPage"
+      [totalPages]="totalPages"
+      (pageChange)="onPageChange($event)"
+    ></app-pagination>
+  </div>
 </div>
