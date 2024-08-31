@@ -74,13 +74,11 @@ export class AuthService {
   }
 
   getCurrentUser(): any {
-    if (!this.currentUserSubject.value) {
-      const storedUser = localStorage.getItem('user');
-      if (storedUser) {
-        this.currentUserSubject.next(JSON.parse(storedUser));
-      }
+    if (isPlatformBrowser(this.platformId)) {
+      const userString = localStorage.getItem('currentUser');
+      return userString ? JSON.parse(userString) : null;
     }
-    return this.currentUserSubject.value || { role: 'UNKNOWN', firstName: '', lastName: '' };
+    return null;
   }
 
   getUserRole(): string {

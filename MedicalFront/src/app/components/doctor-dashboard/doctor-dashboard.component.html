@@ -2,8 +2,30 @@
   <div class="max-w-3xl mx-auto">
     <h1 class="text-3xl font-bold mb-6 text-center">Doctor Dashboard</h1>
     <div class="bg-white shadow-md rounded-lg p-6">
-      <p>Welcome to your doctor dashboard. Here you can manage your appointments and patient information.</p>
-      <!-- Add more dashboard content here -->
+      <h2 class="text-2xl font-semibold mb-4">Your Appointments</h2>
+      <div *ngIf="appointments.length > 0; else noAppointments">
+        <ul class="divide-y divide-gray-200">
+          <li *ngFor="let appointment of appointments" class="py-4">
+            <div class="flex justify-between">
+              <div>
+                <p class="font-semibold">{{ appointment.patient.firstName }} {{ appointment.patient.lastName }}</p>
+                <p class="text-gray-600">{{ appointment.appointmentDateTime | date:'medium' }}</p>
+              </div>
+              <span class="px-2 py-1 text-sm rounded-full" 
+                    [ngClass]="{
+                      'bg-green-200 text-green-800': appointment.status === 'Scheduled',
+                      'bg-blue-200 text-blue-800': appointment.status === 'Completed',
+                      'bg-red-200 text-red-800': appointment.status === 'Cancelled'
+                    }">
+                {{ appointment.status }}
+              </span>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <ng-template #noAppointments>
+        <p class="text-gray-600">You have no upcoming appointments.</p>
+      </ng-template>
     </div>
   </div>
 </div>
