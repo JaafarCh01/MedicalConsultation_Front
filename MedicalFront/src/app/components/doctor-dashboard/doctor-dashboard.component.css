@@ -1,0 +1,17 @@
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+h1 {
+  font-size: 1.5rem;
+}
+
+nav a {
+  color: #4a5568;
+  text-decoration: none;
+}
+
+nav a:hover {
+  background-color: #3182ce;
+  color: white;
+}

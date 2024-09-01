@@ -1,0 +1,22 @@
+<div class="container mx-auto px-4 py-8 mt-16">
+  <div class="mb-8">
+    <app-search (searchEvent)="onSearch($event)" (filterEvent)="onFilter($event)"></app-search>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <app-article-card
+      *ngFor="let article of filteredArticles"
+      [title]="article.title"
+      [author]="article.author"
+      [date]="article.date"
+      [summary]="article.summary"
+      [category]="article.category"
+    ></app-article-card>
+  </div>
+  <div class="mt-8 flex justify-center">
+    <app-pagination
+      [currentPage]="currentPage"
+      [totalPages]="totalPages"
+      (pageChange)="onPageChange($event)"
+    ></app-pagination>
+  </div>
+</div>

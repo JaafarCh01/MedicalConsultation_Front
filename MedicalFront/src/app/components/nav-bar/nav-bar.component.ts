@@ -1,10 +1,15 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { AuthService } from '../../services/authService';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Subscription } from "rxjs";
 import { Router } from '@angular/router';
+
+interface User {
+  firstname: string;
+  email: string;
+}
 
 @Component({
   selector: "nav-bar",
@@ -15,7 +20,7 @@ import { Router } from '@angular/router';
 })
 export class NavBarComponent implements OnInit, OnDestroy {
   isLoggedIn: boolean = false;
-  userName: string = '';
+  user: User | null = null;
   userEmail: string = '';
   private authSubscription!: Subscription;
 
@@ -26,13 +31,17 @@ export class NavBarComponent implements OnInit, OnDestroy {
       (isAuthenticated) => {
         this.isLoggedIn = isAuthenticated;
         if (isAuthenticated) {
-          const user = this.authService.getCurrentUser();
-          console.log('User:', user); // Debugging line
-          this.userName = user && user.firstName ? `${user.firstName} ${user.lastName}` : 'User';
-          console.log('UserName:', this.userName); // Debugging line
-          this.userEmail = user ? user.email : '';
+          const currentUser = this.authService.getCurrentUser();
+          console.log('Current User:', currentUser); // Add this line for debugging
+          if (currentUser) {
+            this.user = { 
+              firstname: currentUser.firstname || currentUser.firstName || '', 
+              email: currentUser.email || '' 
+            };
+            this.userEmail = currentUser.email || '';
+          }
         } else {
-          this.userName = '';
+          this.user = null;
           this.userEmail = '';
         }
       }

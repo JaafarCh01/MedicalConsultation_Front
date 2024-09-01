@@ -21,6 +21,7 @@ import { RegistrationRequest } from "../../models/registration-request.model";
 export class RegisterComponent {
   selectedRole: string | null = null;
   registrationSuccess: string | null = null;
+  registrationError: string | null = null;
 
   doctorForm: FormGroup;
   patientForm: FormGroup;
@@ -84,6 +85,7 @@ export class RegisterComponent {
         },
         error: (error) => {
           console.error("Error registering doctor", error);
+          this.registrationError = "Error registering doctor: " + error.message;
         },
       });
     } else {
@@ -102,6 +104,7 @@ export class RegisterComponent {
         },
         error: (error) => {
           console.error("Error registering patient", error);
+          console.error("Error details:", error.message, error.error);
         },
       });
     } else {

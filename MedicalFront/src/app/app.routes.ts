@@ -9,11 +9,13 @@ import { MailComponent } from './components/mail/mail.component';
 import { DoctorDashboardComponent } from './components/doctor-dashboard/doctor-dashboard.component';
 import { PatientDashboardComponent } from './components/patient-dashboard/patient-dashboard.component';
 import { OrganizationDashboardComponent } from './components/organization-dashboard/organization-dashboard.component';
+import { ArticlesComponent } from "./pages/articles/articles.component";
 
 export const routes: Routes = [
     {path: '', component: HomePageComponent},
     {path: 'about', component: AboutComponent},
     {path: 'docs', component: DocsComponent},
+    {path: 'articles', component: ArticlesComponent},
     {path: 'contact', component: ContactComponent},
     {path: 'register', component: RegisterComponent},
     {path: 'login', component: LoginComponent},

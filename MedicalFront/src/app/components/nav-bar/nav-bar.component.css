@@ -13,3 +13,13 @@
 .dropdown-container.show .dropdown-menu {
   display: block;
 }
+
+.fixed-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px; /* Adjust this value based on your navbar's actual height */
+  z-index: 1000;
+  background-color: white;
+}

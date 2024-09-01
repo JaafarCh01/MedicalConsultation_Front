@@ -453,5 +453,10 @@
         >
             <p>{{ registrationSuccess }}</p>
         </div>
+
+        <!-- Error Message -->
+        <div *ngIf="registrationError" class="text-center text-red-600">
+            <p>{{ registrationError }}</p>
+        </div>
     </div>
 </div>

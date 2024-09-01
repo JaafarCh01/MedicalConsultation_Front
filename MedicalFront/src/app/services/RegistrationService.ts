@@ -15,7 +15,7 @@ export class RegistrationService {
   }
 
   registerPatient(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/register/patient`, data);
+    return this.http.post(`${this.baseUrl}/register/patient`, data, { responseType: 'json' });
   }
 
   registerOrganization(data: any): Observable<any> {
