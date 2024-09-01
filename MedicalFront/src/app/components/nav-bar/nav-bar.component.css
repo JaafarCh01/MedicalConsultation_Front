@@ -1,0 +1,15 @@
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  z-index: 10;
+}
+
+.dropdown-container.show .dropdown-menu {
+  display: block;
+}

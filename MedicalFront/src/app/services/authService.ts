@@ -32,7 +32,8 @@ export class AuthService {
             email: response.user.email || ''
           };
           localStorage.setItem('userRole', user.role);
-          localStorage.setItem('user', JSON.stringify(user));
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          console.log('Setting currentUser:', user); // Debugging line
           this.currentUserSubject.next(user);
           this.isAuthenticatedSubject.next(true);
         } else {
@@ -46,7 +47,7 @@ export class AuthService {
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('userRole');
-    localStorage.removeItem('user');
+    localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
     this.isAuthenticatedSubject.next(false);
   }
@@ -76,6 +77,7 @@ export class AuthService {
   getCurrentUser(): any {
     if (isPlatformBrowser(this.platformId)) {
       const userString = localStorage.getItem('currentUser');
+      console.log('Current User:', userString); // Debugging line
       return userString ? JSON.parse(userString) : null;
     }
     return null;

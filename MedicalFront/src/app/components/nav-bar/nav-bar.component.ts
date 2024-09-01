@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 export class NavBarComponent implements OnInit, OnDestroy {
   isLoggedIn: boolean = false;
   userName: string = '';
+  userEmail: string = '';
   private authSubscription!: Subscription;
 
   constructor(public authService: AuthService, private router: Router) {}
@@ -26,9 +27,13 @@ export class NavBarComponent implements OnInit, OnDestroy {
         this.isLoggedIn = isAuthenticated;
         if (isAuthenticated) {
           const user = this.authService.getCurrentUser();
+          console.log('User:', user); // Debugging line
           this.userName = user && user.firstName ? `${user.firstName} ${user.lastName}` : 'User';
+          console.log('UserName:', this.userName); // Debugging line
+          this.userEmail = user ? user.email : '';
         } else {
           this.userName = '';
+          this.userEmail = '';
         }
       }
     );
@@ -47,5 +52,12 @@ export class NavBarComponent implements OnInit, OnDestroy {
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/']);
+  }
+
+  toggleDropdown() {
+    const dropdownContainer = document.getElementById('dropdownContainer');
+    if (dropdownContainer) {
+      dropdownContainer.classList.toggle('show');
+    }
   }
 }
