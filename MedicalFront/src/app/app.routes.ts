@@ -10,6 +10,8 @@ import { DoctorDashboardComponent } from './components/doctor-dashboard/doctor-d
 import { PatientDashboardComponent } from './components/patient-dashboard/patient-dashboard.component';
 import { OrganizationDashboardComponent } from './components/organization-dashboard/organization-dashboard.component';
 import { ArticlesComponent } from "./pages/articles/articles.component";
+import { OrganizationsComponent } from "./components/organisations/organisations.component";
+import { ArticleDetailComponent } from "./components/article-detail/article-detail.component";
 
 export const routes: Routes = [
     {path: '', component: HomePageComponent},
@@ -22,5 +24,7 @@ export const routes: Routes = [
     {path: 'activate', component: MailComponent},
     {path: 'doctor-dashboard', component: DoctorDashboardComponent},
     {path: 'patient-dashboard', component: PatientDashboardComponent},
-    {path: 'organization-dashboard', component: OrganizationDashboardComponent}
+    {path: 'organization-dashboard', component: OrganizationDashboardComponent},
+    {path: 'organizations', component: OrganizationsComponent},
+    {path: 'article/:id', component: ArticleDetailComponent}
 ];

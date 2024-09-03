@@ -54,8 +54,9 @@ export class NavBarComponent implements OnInit, OnDestroy {
     }
   }
 
-  getUserRole(): string | null {
-    return this.authService.getUserRole();
+  getUserRole(): string {
+    const role = this.authService.getUserRole();
+    return role ? role.charAt(0).toUpperCase() + role.slice(1) : 'User';
   }
 
   logout(): void {
@@ -67,6 +68,20 @@ export class NavBarComponent implements OnInit, OnDestroy {
     const dropdownContainer = document.getElementById('dropdownContainer');
     if (dropdownContainer) {
       dropdownContainer.classList.toggle('show');
+    }
+  }
+
+  getDashboardLink(): string {
+    const role = this.authService.getUserRole();
+    switch (role?.toLowerCase()) {
+      case 'doctor':
+        return '/doctor-dashboard';
+      case 'patient':
+        return '/patient-dashboard';
+      case 'admin':
+        return '/admin-dashboard';
+      default:
+        return '/dashboard';
     }
   }
 }
