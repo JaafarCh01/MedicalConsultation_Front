@@ -1,8 +1,8 @@
 // registration-request.model.ts
 
 export enum Gender {
-  MALE = "Male",
-  FEMALE = "Female",
+  MALE = "MALE",
+  FEMALE = "FEMALE",
 }
 
 export interface RegistrationRequest {

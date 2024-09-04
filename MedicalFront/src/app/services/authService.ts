@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { isPlatformBrowser } from '@angular/common';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -23,17 +24,18 @@ export class AuthService {
   login(credentials: { email: string; password: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/authenticate`, credentials).pipe(
       tap((response: any) => {
-        if (response && response.token && response.user) {
+        if (response && response.token) {
           localStorage.setItem('token', response.token);
+          const decodedToken: any = jwtDecode(response.token);
+          console.log('Decoded Token:', decodedToken); // Keep this for debugging
           const user = {
-            role: response.user.role || 'UNKNOWN',
-            firstName: response.user.firstName || '',
-            lastName: response.user.lastName || '',
-            email: response.user.email || ''
+            role: decodedToken.authorities && decodedToken.authorities.length > 0 ? decodedToken.authorities[0] : 'UNKNOWN',
+            fullName: decodedToken.fullName || 'User',
+            email: decodedToken.sub || ''
           };
           localStorage.setItem('userRole', user.role);
           localStorage.setItem('currentUser', JSON.stringify(user));
-          console.log('Setting currentUser:', user); // Debugging line
+          console.log('Setting currentUser:', user);
           this.currentUserSubject.next(user);
           this.isAuthenticatedSubject.next(true);
         } else {
@@ -77,8 +79,12 @@ export class AuthService {
   getCurrentUser(): any {
     if (isPlatformBrowser(this.platformId)) {
       const userString = localStorage.getItem('currentUser');
-      console.log('Current User:', userString); // Debugging line
-      return userString ? JSON.parse(userString) : null;
+      console.log('Current User from localStorage:', userString); // Keep this for debugging
+      if (userString) {
+        const user = JSON.parse(userString);
+        console.log('Parsed Current User:', user); // Add this for additional debugging
+        return user;
+      }
     }
     return null;
   }

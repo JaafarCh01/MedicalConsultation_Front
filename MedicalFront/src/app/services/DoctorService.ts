@@ -13,11 +13,12 @@ export class DoctorService {
 
   private getHeaders(): HttpHeaders {
     const token = this.authService.getToken();
-    console.log('Token used for request:', token); // Add this line for debugging
-    return new HttpHeaders({
+    const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
+    console.log('Headers for request:', headers.keys().map(key => `${key}: ${headers.get(key)}`));
+    return headers;
   }
 
   getDoctorAppointments(doctorId: number): Observable<any[]> {
@@ -34,5 +35,19 @@ export class DoctorService {
 
   getDoctorPatients(doctorId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/patients/${doctorId}`, { headers: this.getHeaders() });
+  }
+
+  updateDoctor(doctorId: number, doctorData: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/updateData`, doctorData, { headers: this.getHeaders() })
+      .pipe(
+        catchError(error => {
+          console.error('Error in updateDoctor:', error);
+          throw error;
+        })
+      );
+  }
+
+  getDoctorById(doctorId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${doctorId}`, { headers: this.getHeaders() });
   }
 }

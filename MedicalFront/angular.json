@@ -76,7 +76,8 @@
               "buildTarget": "MedicalFront:build:production"
             },
             "development": {
-              "buildTarget": "MedicalFront:build:development"
+              "buildTarget": "MedicalFront:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

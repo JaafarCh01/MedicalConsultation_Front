@@ -39,6 +39,7 @@ export class RegisterComponent {
       password: ["", [Validators.required, Validators.minLength(8)]],
       dateOfBirth: ["", [Validators.required]],
       city: ["", [Validators.required]],
+      gender: ['', [Validators.required]],
     });
 
     this.patientForm = this.fb.group({
@@ -48,6 +49,7 @@ export class RegisterComponent {
       password: ["", [Validators.required, Validators.minLength(8)]],
       dateOfBirth: ["", [Validators.required]],
       city: ["", [Validators.required]],
+      gender: ['', [Validators.required]],
     });
 
     this.organizationForm = this.fb.group({
@@ -65,7 +67,8 @@ export class RegisterComponent {
       phoneNumber: ["", [Validators.required]],
       schedule: [""],
       website: [""],
-      facilityEmailAddress: ["", [Validators.required, Validators.email]]
+      facilityEmailAddress: ["", [Validators.required, Validators.email]],
+      gender: ['', [Validators.required]],
     });
   }
 
@@ -104,7 +107,13 @@ export class RegisterComponent {
         },
         error: (error) => {
           console.error("Error registering patient", error);
-          console.error("Error details:", error.message, error.error);
+          if (error.error instanceof ErrorEvent) {
+            // Client-side error
+            this.registrationError = `Error: ${error.error.message}`;
+          } else {
+            // Server-side error
+            this.registrationError = `Error Code: ${error.status}\nMessage: ${error.message}`;
+          }
         },
       });
     } else {

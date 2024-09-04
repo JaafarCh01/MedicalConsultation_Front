@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ArticleCardComponent } from '../../components/article-card/article-card.component';
-import { SearchComponent } from '../../components/search/search.component';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 
 @Component({
   selector: 'app-articles',
   standalone: true,
-  imports: [ArticleCardComponent, SearchComponent, PaginationComponent, CommonModule, RouterModule],
+  imports: [PaginationComponent, CommonModule, RouterModule, DatePipe],
   templateUrl: './articles.component.html',
   styleUrl: './articles.component.css'
 })
@@ -36,10 +34,6 @@ export class ArticlesComponent implements OnInit {
 
   ngOnInit() {
     this.filterArticles();
-  }
-
-  onSearch(searchTerm: string) {
-    this.filterArticles(searchTerm);
   }
 
   onFilter(filter: string) {

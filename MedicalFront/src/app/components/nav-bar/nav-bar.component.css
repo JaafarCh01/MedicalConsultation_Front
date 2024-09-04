@@ -1,13 +1,17 @@
 .dropdown-container {
   position: relative;
-  display: inline-block;
 }
 
 .dropdown-menu {
   display: none;
   position: absolute;
   right: 0;
+  top: 100%;
   z-index: 10;
+}
+
+.dropdown-menu:not(.hidden) {
+  display: block;
 }
 
 .dropdown-container.show .dropdown-menu {

@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
+import { RegistrationRequest } from "../models/registration-request.model";
 
 @Injectable({
   providedIn: "root",
@@ -10,15 +11,15 @@ export class RegistrationService {
 
   constructor(private http: HttpClient) {}
 
-  registerDoctor(data: any): Observable<any> {
+  registerDoctor(data: RegistrationRequest): Observable<any> {
     return this.http.post(`${this.baseUrl}/register/doctor`, data);
   }
 
-  registerPatient(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/register/patient`, data, { responseType: 'json' });
+  registerPatient(data: RegistrationRequest): Observable<any> {
+    return this.http.post(`${this.baseUrl}/register/patient`, data);
   }
 
-  registerOrganization(data: any): Observable<any> {
+  registerOrganization(data: RegistrationRequest): Observable<any> {
     return this.http.post(`${this.baseUrl}/register/organization`, data);
   }
 }

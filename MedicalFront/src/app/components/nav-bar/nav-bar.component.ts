@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { AuthService } from '../../services/authService';
 import { CommonModule } from '@angular/common';
@@ -7,7 +7,7 @@ import { Subscription } from "rxjs";
 import { Router } from '@angular/router';
 
 interface User {
-  firstname: string;
+  fullName: string;
   email: string;
 }
 
@@ -23,6 +23,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
   user: User | null = null;
   userEmail: string = '';
   private authSubscription!: Subscription;
+  isDropdownOpen: boolean = false;
 
   constructor(public authService: AuthService, private router: Router) {}
 
@@ -32,10 +33,10 @@ export class NavBarComponent implements OnInit, OnDestroy {
         this.isLoggedIn = isAuthenticated;
         if (isAuthenticated) {
           const currentUser = this.authService.getCurrentUser();
-          console.log('Current User:', currentUser); // Add this line for debugging
+          console.log('Current User in NavBar:', currentUser); // Add this line for debugging
           if (currentUser) {
             this.user = { 
-              firstname: currentUser.firstname || currentUser.firstName || '', 
+              fullName: currentUser.fullName|| currentUser.email.split('@')[0] || '', 
               email: currentUser.email || '' 
             };
             this.userEmail = currentUser.email || '';
@@ -62,13 +63,11 @@ export class NavBarComponent implements OnInit, OnDestroy {
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/']);
+    this.isDropdownOpen = false;
   }
 
   toggleDropdown() {
-    const dropdownContainer = document.getElementById('dropdownContainer');
-    if (dropdownContainer) {
-      dropdownContainer.classList.toggle('show');
-    }
+    this.isDropdownOpen = !this.isDropdownOpen;
   }
 
   getDashboardLink(): string {
@@ -82,6 +81,14 @@ export class NavBarComponent implements OnInit, OnDestroy {
         return '/admin-dashboard';
       default:
         return '/dashboard';
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  clickOutside(event: Event) {
+    const dropdownContainer = document.getElementById('dropdownContainer');
+    if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
+      this.isDropdownOpen = false;
     }
   }
 }

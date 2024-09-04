@@ -28,7 +28,8 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      this.authService.login(this.loginForm.value).subscribe({
+      const { email, password } = this.loginForm.value;
+      this.authService.login({ email, password }).subscribe({
         next: (response) => {
           console.log('Login successful', response);
           const role = this.authService.getUserRole();

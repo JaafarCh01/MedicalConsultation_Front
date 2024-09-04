@@ -124,6 +124,22 @@
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                     />
                 </div>
+                <div>
+                    <label
+                        for="doctorGender"
+                        class="block text-sm font-medium text-gray-700"
+                        >Gender</label
+                    >
+                    <select
+                        id="doctorGender"
+                        formControlName="gender"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    >
+                        <option value="">Select Gender</option>
+                        <option value="MALE">Male</option>
+                        <option value="FEMALE">Female</option>
+                    </select>
+                </div>
             </div>
             <button
                 type="submit"
@@ -221,6 +237,22 @@
                         formControlName="city"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                     />
+                </div>
+                <div>
+                    <label
+                        for="patientGender"
+                        class="block text-sm font-medium text-gray-700"
+                        >Gender</label
+                    >
+                    <select
+                        id="patientGender"
+                        formControlName="gender"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                    >
+                        <option value="">Select Gender</option>
+                        <option value="MALE">Male</option>
+                        <option value="FEMALE">Female</option>
+                    </select>
                 </div>
             </div>
             <button
@@ -436,6 +468,22 @@
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                     />
                 </div>
+                <div>
+                    <label
+                        for="orgGender"
+                        class="block text-sm font-medium text-gray-700"
+                        >Gender</label
+                    >
+                    <select
+                        id="orgGender"
+                        formControlName="gender"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    >
+                        <option value="">Select Gender</option>
+                        <option value="MALE">Male</option>
+                        <option value="FEMALE">Female</option>
+                    </select>
+                </div>
             </div>
             <button
                 type="submit"
@@ -445,18 +493,3 @@
                 Register Organization
             </button>
         </form>
-
-        <!-- Success Message -->
-        <div
-            *ngIf="registrationSuccess"
-            class="mt-6 text-center text-green-600"
-        >
-            <p>{{ registrationSuccess }}</p>
-        </div>
-
-        <!-- Error Message -->
-        <div *ngIf="registrationError" class="text-center text-red-600">
-            <p>{{ registrationError }}</p>
-        </div>
-    </div>
-</div>
