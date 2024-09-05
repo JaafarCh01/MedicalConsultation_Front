@@ -4,6 +4,7 @@ import { DoctorService } from '../../services/DoctorService';
 import { AuthService } from '../../services/authService';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Doctor } from '../../models/doctor.model';
 
 @Component({
   selector: 'app-doctor-dashboard',
@@ -14,7 +15,6 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 })
 export class DoctorDashboardComponent implements OnInit {
   appointments: any[] = [];
-  doctorId: number | null = null;
   doctorProfile: any;
   profileForm: FormGroup;
   missingAttributes: string[] = [];
@@ -29,6 +29,8 @@ export class DoctorDashboardComponent implements OnInit {
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.profileForm = this.formBuilder.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
       speciality: ['', Validators.required],
       education: ['', Validators.required],
       workPlace: ['', Validators.required],
@@ -47,85 +49,69 @@ export class DoctorDashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('DoctorDashboardComponent initialized');
     if (isPlatformBrowser(this.platformId)) {
-      console.log('Running in browser');
-      const currentUser = this.authService.getCurrentUser();
-      console.log('Current user:', currentUser);
-      this.doctorId = currentUser?.id;
-      console.log('Doctor ID:', this.doctorId);
-      if (this.doctorId) {
-        this.loadAppointments();
-        this.loadDoctorProfile();
-      } else {
-        console.error('No doctor ID found');
-      }
-    } else {
-      console.log('Not running in browser');
+ 
     }
   }
 
-  loadAppointments() {
-    console.log('Loading appointments for doctor ID:', this.doctorId);
-    if (this.doctorId) {
-      this.doctorService.getDoctorAppointments(this.doctorId).subscribe({
-        next: (appointments) => {
-          console.log('Appointments received:', appointments);
-          this.appointments = appointments;
-        },
-        error: (error) => {
-          console.error('Error fetching appointments:', error);
-        }
-      });
-    }
-  }
 
   loadDoctorProfile() {
-    this.doctorService.getDoctorById(this.doctorId!).subscribe({
-      next: (doctor: any) => {
+    this.doctorService.getDoctorProfile().subscribe({
+      next: (doctor: Doctor) => {
         this.doctorProfile = doctor;
+        this.profileForm.patchValue({
+          firstName: doctor.firstName,
+          lastName: doctor.lastName,
+          // ... other fields
+        });
         this.checkMissingAttributes();
-        this.profileForm.patchValue(this.doctorProfile);
-        this.isProfileComplete = this.missingAttributes.length === 0;
-        this.showProfileForm = !this.isProfileComplete;
       },
       error: (error: any) => {
-        console.error('Error fetching doctor profile:', error);
+        console.error('Error loading doctor profile:', error);
+        if (error.status === 403) {
+          // Handle forbidden error (e.g., redirect to login or show message)
+          console.log('User role:', this.authService.getUserRole());
+        }
       }
     });
   }
 
   checkMissingAttributes() {
     this.missingAttributes = Object.keys(this.profileForm.controls).filter(
-      key => !this.doctorProfile[key] && this.profileForm.get(key)?.validator
+      key => !this.profileForm.get(key)?.value && this.profileForm.get(key)?.validator
     );
   }
 
   updateProfile() {
-    if (this.profileForm.valid && this.doctorId) {
-      this.doctorService.updateDoctor(this.doctorId, this.profileForm.value).subscribe({
-        next: (updatedDoctor: any) => {
+    if (!this.authService.isAuthenticated()) {
+      console.error('User is not authenticated');
+      // Handle unauthenticated user (e.g., redirect to login)
+      return;
+    }
+
+    if (this.profileForm.valid) {
+      console.log('Full form data:', this.profileForm.value);
+      this.doctorService.updateDoctor(this.profileForm.value).subscribe({
+        next: (updatedDoctor: Doctor) => {
           this.doctorProfile = updatedDoctor;
           this.checkMissingAttributes();
-          this.isProfileComplete = this.missingAttributes.length === 0;
-          if (this.isProfileComplete) {
-            this.showProfileForm = false;
-          }
+          console.log('Profile updated successfully', updatedDoctor);
         },
         error: (error: any) => {
           console.error('Error updating doctor profile:', error);
+          // You can add user-friendly error handling here, e.g., showing an error message to the user
+          // For example:
+          // this.errorMessage = `Failed to update profile: ${error.message}`;
         }
       });
-    } else if (!this.doctorId) {
-      console.error('Doctor ID is undefined');
     } else {
-      this.validateAllFormFields(this.profileForm);
+      console.log('Form is invalid', this.profileForm.errors);
     }
   }
 
   changeSection(section: string) {
     this.activeSection = section;
-    if (section === 'profile' && this.doctorId) {
+    if (section === 'profile') {
       this.loadDoctorProfile();
     }
   }

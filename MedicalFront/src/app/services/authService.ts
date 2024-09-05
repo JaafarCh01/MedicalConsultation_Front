@@ -25,9 +25,9 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/authenticate`, credentials).pipe(
       tap((response: any) => {
         if (response && response.token) {
-          localStorage.setItem('token', response.token);
+          this.setToken(response.token);
           const decodedToken: any = jwtDecode(response.token);
-          console.log('Decoded Token:', decodedToken); // Keep this for debugging
+          console.log('Decoded Token:', decodedToken);
           const user = {
             role: decodedToken.authorities && decodedToken.authorities.length > 0 ? decodedToken.authorities[0] : 'UNKNOWN',
             fullName: decodedToken.fullName || 'User',
@@ -38,6 +38,7 @@ export class AuthService {
           console.log('Setting currentUser:', user);
           this.currentUserSubject.next(user);
           this.isAuthenticatedSubject.next(true);
+          console.log('Token set:', response.token);
         } else {
           console.error('Invalid response structure');
         }
@@ -55,10 +56,9 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    if (isPlatformBrowser(this.platformId)) {
-      return localStorage.getItem(this.tokenKey);
-    }
-    return null;
+    const token = localStorage.getItem(this.tokenKey);
+    console.log('Retrieved token:', token);
+    return token;
   }
 
   isLoggedIn(): boolean {
@@ -91,7 +91,9 @@ export class AuthService {
 
   getUserRole(): string {
     const user = this.currentUserSubject.value;
-    return user && user.role ? user.role : 'UNKNOWN';
+    const role = user && user.role ? user.role : 'UNKNOWN';
+    console.log('Current user role:', role);
+    return role;
   }
 
   private hasToken(): boolean {

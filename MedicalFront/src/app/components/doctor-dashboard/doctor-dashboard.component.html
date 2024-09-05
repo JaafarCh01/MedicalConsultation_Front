@@ -15,33 +15,7 @@
     <!-- Main content -->
     <div class="flex-1 p-10 overflow-y-auto">
       <div class="max-w-3xl mx-auto">
-        <!-- Appointments Section -->
-        <div *ngIf="activeSection === 'appointments'">
-          <h2 class="text-3xl font-semibold mb-6 text-gray-700">Your Appointments</h2>
-          <div *ngIf="appointments.length > 0; else noAppointments">
-            <ul class="divide-y divide-gray-200">
-              <li *ngFor="let appointment of appointments" class="py-6">
-                <div class="flex justify-between items-center">
-                  <div>
-                    <p class="text-lg font-semibold text-gray-900">{{ appointment.patient.firstName }} {{ appointment.patient.lastName }}</p>
-                    <p class="text-gray-600">{{ appointment.appointmentDateTime | date:'medium' }}</p>
-                  </div>
-                  <span class="px-3 py-1 text-sm font-medium rounded-full" 
-                        [ngClass]="{
-                          'bg-green-200 text-green-800': appointment.status === 'Scheduled',
-                          'bg-blue-200 text-blue-800': appointment.status === 'Completed',
-                          'bg-red-200 text-red-800': appointment.status === 'Cancelled'
-                        }">
-                    {{ appointment.status }}
-                  </span>
-                </div>
-              </li>
-            </ul>
-          </div>
-          <ng-template #noAppointments>
-            <p class="text-gray-600 ">You have no upcoming appointments.</p>
-          </ng-template>
-        </div>
+    
 
         <!-- Profile Section -->
         <div *ngIf="activeSection === 'profile'" class="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-lg shadow-lg">

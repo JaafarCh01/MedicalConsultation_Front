@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, tap, catchError } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Observable, tap, catchError, throwError } from 'rxjs';
 import { AuthService } from './authService'; // Assuming AuthService is in the same directory
+import { Doctor } from '../models/doctor.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,41 +14,68 @@ export class DoctorService {
 
   private getHeaders(): HttpHeaders {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders({
+    console.log('Token being sent:', token); // Add this line for debugging
+    return new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-    console.log('Headers for request:', headers.keys().map(key => `${key}: ${headers.get(key)}`));
-    return headers;
   }
 
-  getDoctorAppointments(doctorId: number): Observable<any[]> {
-    console.log('Fetching appointments for doctor ID:', doctorId);
-    return this.http.get<any[]>(`${this.apiUrl}/${doctorId}/appointments`, { headers: this.getHeaders() })
+  
+
+  getDoctorPatients(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/patients`, { headers: this.getHeaders() })
       .pipe(
-        tap(appointments => console.log('Appointments received:', appointments)),
-        catchError(error => {
-          console.error('Error in getDoctorAppointments:', error);
-          throw error;
-        })
+        catchError(this.handleError)
       );
   }
 
-  getDoctorPatients(doctorId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/patients/${doctorId}`, { headers: this.getHeaders() });
-  }
-
-  updateDoctor(doctorId: number, doctorData: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/updateData`, doctorData, { headers: this.getHeaders() })
+  updateDoctor(doctorData: any): Observable<Doctor> {
+    console.log('Sending update request:', doctorData);
+    return this.http.put<Doctor>(`${this.apiUrl}/updateData`, doctorData, { headers: this.getHeaders() })
       .pipe(
+        tap(response => console.log('Update response:', response)),
         catchError(error => {
           console.error('Error in updateDoctor:', error);
-          throw error;
+          if (error.error instanceof Array) {
+            const errorMessages = error.error.map((err: any) => err.defaultMessage).join(', ');
+            return throwError(() => new Error(`${error.status} ${error.statusText}: ${errorMessages}`));
+          }
+          return throwError(() => new Error(`${error.status} ${error.statusText}: ${JSON.stringify(error.error)}`));
         })
       );
   }
 
-  getDoctorById(doctorId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${doctorId}`, { headers: this.getHeaders() });
+  getDoctorProfile(): Observable<Doctor> {
+    return this.http.get<Doctor>(`${this.apiUrl}/profile`, { headers: this.getHeaders() })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getAllDoctors(): Observable<Doctor[]> {
+    return this.http.get<Doctor[]>(`${this.apiUrl}/all`, { headers: this.getHeaders() })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getDoctorById(id: number): Observable<Doctor> {
+    return this.http.get<Doctor>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  verifyDoctor(verificationData: FormData): Observable<Doctor> {
+    return this.http.post<Doctor>(`${this.apiUrl}/verifyDoctor`, verificationData, { headers: this.getHeaders() })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  private handleError = (error: HttpErrorResponse) => {
+    console.error('An error occurred:', error);
+    return throwError(() => new Error(`${error.status} ${error.statusText}: ${error.message}`));
   }
 }
