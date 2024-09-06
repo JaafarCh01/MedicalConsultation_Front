@@ -5,10 +5,8 @@
       <h1 class="text-2xl font-bold text-gray-800">Organization Dashboard</h1>
     </div>
     <nav class="mt-6">
-      <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-500 hover:text-white">Dashboard</a>
-      <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-500 hover:text-white">Doctors</a>
-      <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-500 hover:text-white">Patients</a>
-      <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-500 hover:text-white">Profile</a>
+      <a (click)="changeSection('dashboard')" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-500 hover:text-white cursor-pointer">Dashboard</a>
+      <a (click)="changeSection('profile')" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-500 hover:text-white cursor-pointer">Profile</a>
       <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-500 hover:text-white">Settings</a>
     </nav>
   </div>
@@ -16,9 +14,53 @@
   <!-- Main content -->
   <div class="flex-1 p-10 mt-20">
     <div class="max-w-3xl mx-auto">
-      <h2 class="text-3xl font-semibold mb-6 text-gray-700">Welcome to your organization dashboard</h2>
-      <p>Here you can manage your organization's doctors and patients.</p>
-      <!-- Add more dashboard content here -->
+      <!-- Dashboard Section -->
+      <div *ngIf="activeSection === 'dashboard'">
+        <h2 class="text-3xl font-semibold mb-6 text-gray-700">Welcome to your organization dashboard</h2>
+        <p>Here you can manage your organization's information and settings.</p>
+      </div>
+
+      <!-- Profile Section -->
+      <div *ngIf="activeSection === 'profile'" class="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-lg shadow-lg">
+        <h2 class="text-3xl font-semibold mb-6 text-indigo-800">Your Organization Profile</h2>
+
+        <!-- Verification prompt or Profile form -->
+        <div *ngIf="!isProfileComplete">
+          <div *ngIf="!showProfileForm" class="bg-white border-l-4 border-indigo-500 text-indigo-700 p-6 mb-8 rounded-r-lg shadow-md" role="alert">
+            <p class="font-bold text-lg mb-2">Complete Your Profile</p>
+            <p class="mb-4">To enhance your organization's presence, please complete your profile with all required information.</p>
+            <button (click)="showProfileForm = true" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+              Complete Profile
+            </button>
+          </div>
+
+          <div *ngIf="showProfileForm" class="bg-white p-8 rounded-lg shadow-md">
+            <div *ngIf="missingAttributes.length > 0" class="bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-4 mb-6 rounded-r-lg" role="alert">
+              <p class="font-bold">Please complete your profile</p>
+              <p>The following information is missing: {{ missingAttributes.join(', ') }}</p>
+            </div>
+            <form [formGroup]="profileForm" (ngSubmit)="updateProfile()" class="space-y-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div *ngFor="let field of profileForm.controls | keyvalue" class="flex flex-col">
+                  <label [for]="field.key" class="block text-sm font-medium text-gray-700 mb-1">{{ formatFieldName(field.key) }}</label>
+                  <input 
+                    [id]="field.key" 
+                    [formControlName]="field.key" 
+                    class="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out"
+                    [ngClass]="{'bg-red-50 border-red-300 focus:border-red-500 focus:ring-red-500': profileForm.get(field.key)?.invalid && profileForm.get(field.key)?.touched}"
+                  >
+                  <p *ngIf="profileForm.get(field.key)?.invalid && profileForm.get(field.key)?.touched" class="mt-1 text-sm text-red-600">This field is required</p>
+                </div>
+              </div>
+              <div class="flex justify-end mt-8">
+                <button type="submit" [disabled]="!profileForm.valid" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                  Update Profile
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

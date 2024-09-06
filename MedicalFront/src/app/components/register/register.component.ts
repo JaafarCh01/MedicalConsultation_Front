@@ -59,15 +59,6 @@ export class RegisterComponent {
       password: ["", [Validators.required, Validators.minLength(8)]],
       dateOfBirth: ["", [Validators.required]],
       city: ["", [Validators.required]],
-      organizationName: ["", [Validators.required]],
-      typeOfInstitution: ["", [Validators.required]],
-      description: [""],
-      facilityCity: ["", [Validators.required]],
-      facilityAddress: ["", [Validators.required]],
-      phoneNumber: ["", [Validators.required]],
-      schedule: [""],
-      website: [""],
-      facilityEmailAddress: ["", [Validators.required, Validators.email]],
       gender: ['', [Validators.required]],
     });
   }
