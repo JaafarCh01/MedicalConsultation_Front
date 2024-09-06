@@ -62,7 +62,24 @@ export class DoctorDashboardComponent implements OnInit {
         this.profileForm.patchValue({
           firstName: doctor.firstName,
           lastName: doctor.lastName,
-          // ... other fields
+          email: doctor.email,
+          dateOfBirth: doctor.dateOfBirth,
+          city: doctor.city,
+          gender: doctor.gender,
+          speciality: doctor.speciality,
+          education: doctor.education,
+          workPlace: doctor.workPlace,
+          position: doctor.position,
+          workExperienceYears: doctor.workExperienceYears,
+          awards: doctor.awards,
+          contactPhone: doctor.contactPhone,
+          contactEmail: doctor.contactEmail,
+          aboutMe: doctor.aboutMe,
+          specializationDetails: doctor.specializationDetails,
+          workExperienceDetails: doctor.workExperienceDetails,
+          furtherTraining: doctor.furtherTraining,
+          achievementsAndAwards: doctor.achievementsAndAwards,
+          scientificWorks: doctor.scientificWorks
         });
         this.checkMissingAttributes();
       },

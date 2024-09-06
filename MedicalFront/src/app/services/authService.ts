@@ -19,7 +19,45 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  ) {
+    this.checkInitialAuthState();
+  }
+
+  private checkInitialAuthState() {
+    if (isPlatformBrowser(this.platformId)) {
+      const token = this.getToken();
+      if (token) {
+        try {
+          const decodedToken: any = jwtDecode(token);
+          if (decodedToken.exp * 1000 < Date.now()) {
+            // Token has expired
+            this.logout();
+          } else {
+            // Token is valid
+            this.setUserFromToken(token);
+          }
+        } catch (error) {
+          console.error('Error decoding token:', error);
+          this.logout();
+        }
+      } else {
+        this.logout();
+      }
+    }
+  }
+
+  private setUserFromToken(token: string) {
+    const decodedToken: any = jwtDecode(token);
+    const user = {
+      role: decodedToken.authorities && decodedToken.authorities.length > 0 ? decodedToken.authorities[0] : 'UNKNOWN',
+      fullName: decodedToken.fullName || 'User',
+      email: decodedToken.sub || ''
+    };
+    localStorage.setItem('userRole', user.role);
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    this.currentUserSubject.next(user);
+    this.isAuthenticatedSubject.next(true);
+  }
 
   login(credentials: { email: string; password: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/authenticate`, credentials).pipe(
@@ -48,9 +86,11 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('currentUser');
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem(this.tokenKey);
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('currentUser');
+    }
     this.currentUserSubject.next(null);
     this.isAuthenticatedSubject.next(false);
   }

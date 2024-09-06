@@ -33,10 +33,9 @@ export class NavBarComponent implements OnInit, OnDestroy {
         this.isLoggedIn = isAuthenticated;
         if (isAuthenticated) {
           const currentUser = this.authService.getCurrentUser();
-          console.log('Current User in NavBar:', currentUser); // Add this line for debugging
           if (currentUser) {
             this.user = { 
-              fullName: currentUser.fullName|| currentUser.email.split('@')[0] || '', 
+              fullName: currentUser.fullName || 'User', 
               email: currentUser.email || '' 
             };
             this.userEmail = currentUser.email || '';

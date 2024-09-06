@@ -31,10 +31,16 @@ export class DoctorService {
   }
 
   updateDoctor(doctorData: any): Observable<Doctor> {
-    console.log('Sending update request:', doctorData);
+    console.log('Sending update request:', JSON.stringify(doctorData, null, 2));
     return this.http.put<Doctor>(`${this.apiUrl}/updateData`, doctorData, { headers: this.getHeaders() })
       .pipe(
-        tap(response => console.log('Update response:', response)),
+        tap(response => {
+          console.log('Update response:', JSON.stringify(response, null, 2));
+          // Log each field separately using type-safe property access
+          Object.keys(response).forEach(key => {
+            console.log(`${key}:`, (response as any)[key]);
+          });
+        }),
         catchError(error => {
           console.error('Error in updateDoctor:', error);
           if (error.error instanceof Array) {
