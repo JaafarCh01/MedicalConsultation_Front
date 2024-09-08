@@ -5,6 +5,8 @@ import { PaginationComponent } from '../../components/pagination/pagination.comp
 import { CommonModule } from '@angular/common';
 import { DoctorService } from '../../services/DoctorService';
 import { Doctor } from '../../models/doctor.model';
+import { MedicalCategories } from '../../models/medical-categories';
+import { MedicalCategoriesDisplay } from '../../models/medical-categories-display';
 
 @Component({
   selector: 'app-docs',
@@ -16,6 +18,7 @@ import { Doctor } from '../../models/doctor.model';
 export class DocsComponent implements OnInit {
   doctors: Doctor[] = [];
   filteredDoctors: Doctor[] = [];
+  displayedDoctors: Doctor[] = [];
   currentPage = 1;
   pageSize = 6;
   totalPages = 1;
@@ -39,22 +42,29 @@ export class DocsComponent implements OnInit {
   }
 
   onSearch(searchTerm: string) {
+    this.currentPage = 1;
     this.filterDoctors(searchTerm);
   }
 
-  onFilter(specialty: string) {
+  onFilter(specialty: MedicalCategories | 'All') {
+    this.currentPage = 1;
     this.filterDoctors(undefined, specialty);
   }
 
-  filterDoctors(searchTerm?: string, specialty?: string) {
-    let filtered = this.doctors;
+  filterDoctors(searchTerm?: string, specialty?: MedicalCategories | 'All') {
+    let filtered = this.doctors.filter(doctor => doctor.verified === true);
 
     if (searchTerm) {
-      filtered = filtered.filter(doctor => 
-        doctor.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        doctor.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        doctor.speciality.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      const lowerCaseSearchTerm = searchTerm.toLowerCase();
+      filtered = filtered.filter(doctor => {
+        const fullName = `${doctor.firstName} ${doctor.lastName}`.toLowerCase();
+        const reversedName = `${doctor.lastName} ${doctor.firstName}`.toLowerCase();
+        return fullName.includes(lowerCaseSearchTerm) ||
+               reversedName.includes(lowerCaseSearchTerm) ||
+               doctor.firstName.toLowerCase().includes(lowerCaseSearchTerm) ||
+               doctor.lastName.toLowerCase().includes(lowerCaseSearchTerm) ||
+               MedicalCategoriesDisplay[doctor.speciality].toLowerCase().includes(lowerCaseSearchTerm);
+      });
     }
 
     if (specialty && specialty !== 'All') {
@@ -63,14 +73,13 @@ export class DocsComponent implements OnInit {
 
     this.filteredDoctors = filtered;
     this.totalPages = Math.ceil(this.filteredDoctors.length / this.pageSize);
-    this.currentPage = 1;
     this.updatePagedDoctors();
   }
 
   updatePagedDoctors() {
     const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
-    this.filteredDoctors = this.filteredDoctors.slice(startIndex, endIndex);
+    this.displayedDoctors = this.filteredDoctors.slice(startIndex, endIndex);
   }
 
   onPageChange(page: number) {

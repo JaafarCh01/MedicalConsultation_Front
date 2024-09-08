@@ -1,7 +1,9 @@
-import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DocardComponent } from '../docard/docard.component';
 import { FormsModule } from '@angular/forms';
+import { MedicalCategories } from '../../models/medical-categories';
+import { MedicalCategoriesDisplay } from '../../models/medical-categories-display';
 
 @Component({
   selector: 'app-search',
@@ -10,12 +12,24 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
 })
-export class SearchComponent {
+export class SearchComponent implements OnInit {
   @Output() searchEvent = new EventEmitter<string>();
-  @Output() filterEvent = new EventEmitter<string>();
+  @Output() filterEvent = new EventEmitter<MedicalCategories | 'All'>();
   @Input() filteredCards: any[] = [];
   @Input() currentPage: number = 1;
   @Input() totalPages: number = 1;
+
+  categories: { key: MedicalCategories | 'All', value: string }[] = [];
+
+  ngOnInit() {
+    this.categories = [
+      { key: 'All', value: 'All Specialties' },
+      ...Object.entries(MedicalCategoriesDisplay).map(([key, value]) => ({
+        key: key as MedicalCategories,
+        value: value
+      }))
+    ];
+  }
 
   onSearch(event: Event) {
     const searchTerm = (event.target as HTMLInputElement).value;
@@ -23,7 +37,7 @@ export class SearchComponent {
   }
 
   onFilter(event: Event) {
-    const specialty = (event.target as HTMLSelectElement).value;
+    const specialty = (event.target as HTMLSelectElement).value as MedicalCategories | 'All';
     this.filterEvent.emit(specialty);
   }
 
