@@ -1,4 +1,3 @@
-
 import { MedicalCategories } from './medical-categories';
 import { User } from './user.model';
 
@@ -18,5 +17,7 @@ export interface Doctor extends User {
   achievementsAndAwards: string;
   scientificWorks: string;
   verified: boolean;
+  profilePicture?: string;
+  consultationFee: number;
   [key: string]: any; // Add this line to allow string indexing
 }

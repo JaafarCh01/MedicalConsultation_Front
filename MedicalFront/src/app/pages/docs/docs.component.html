@@ -4,11 +4,11 @@
   </div>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     <app-docard
-      *ngFor="let card of filteredCards"
-      [image]="card.image"
-      [name]="card.name"
-      [price]="card.price"
-      [specialty]="card.specialty"
+      *ngFor="let doctor of filteredDoctors"
+      [image]="doctor.profilePicture || 'https://via.placeholder.com/150'"
+      [name]="doctor.firstName + ' ' + doctor.lastName"
+      [price]="'Consultation fee: $' + doctor.consultationFee"
+      [specialty]="doctor.speciality"
     ></app-docard>
   </div>
   <div class="mt-8 flex justify-center">
