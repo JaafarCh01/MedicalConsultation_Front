@@ -12,6 +12,9 @@ import { OrganizationDashboardComponent } from './components/organization-dashbo
 import { ArticlesComponent } from "./pages/articles/articles.component";
 import { OrganizationsComponent } from "./components/organisations/organisations.component";
 import { ArticleDetailComponent } from "./components/article-detail/article-detail.component";
+import { AskQuestionComponent } from './components/ask-question/ask-question.component';
+import { QuestionListComponent } from './components/question-list/question-list.component';
+import { QuestionDetailComponent } from './components/question-detail/question-detail.component';
 
 export const routes: Routes = [
     {path: '', component: HomePageComponent},
@@ -26,5 +29,8 @@ export const routes: Routes = [
     {path: 'patient-dashboard', component: PatientDashboardComponent},
     {path: 'organization-dashboard', component: OrganizationDashboardComponent},
     {path: 'organizations', component: OrganizationsComponent},
-    {path: 'article/:id', component: ArticleDetailComponent}
+    { path: 'article/:id', component: ArticleDetailComponent },
+    { path: 'ask-question', component: AskQuestionComponent },
+    { path: 'questions', component: QuestionListComponent },
+    { path: 'question/:id', component: QuestionDetailComponent }
 ];

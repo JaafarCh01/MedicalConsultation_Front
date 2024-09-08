@@ -1,0 +1,9 @@
+<h2>Questions</h2>
+<ul>
+  <li *ngFor="let question of questions">
+    <h3>{{ question.title }}</h3>
+    <p>Category: {{ question.category }}</p>
+    <p>{{ question.description }}</p>
+    <a [routerLink]="['/question', question.id]">View Details</a>
+  </li>
+</ul>
