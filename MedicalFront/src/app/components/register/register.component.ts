@@ -41,12 +41,13 @@ export class RegisterComponent implements OnInit {
     });
 
     this.organizationForm = this.fb.group({
-      organizationName: [''],
+      firstName: [''],
+      lastName: [''],
       email: [''],
       password: [''],
+      dateOfBirth: [''],
       city: [''],
-      address: [''],
-      phoneNumber: ['']
+      gender: ['']
     });
   }
 
