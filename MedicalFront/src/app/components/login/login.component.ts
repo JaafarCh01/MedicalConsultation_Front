@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
 })
 export class LoginComponent {
   loginForm: FormGroup;
-  errorMessage: string | null = null;
+  loginError: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -47,17 +47,26 @@ export class LoginComponent {
               this.router.navigate(['/']);
           }
         },
-        error: (error) => {
-          console.error('Login error', error);
-          if (error.status === 403) {
-            this.errorMessage = 'Your account is not activated. Please check your email for the activation link.';
-          } else if (error.status === 401) {
-            this.errorMessage = 'Invalid email or password. Please try again.';
-          } else {
-            this.errorMessage = 'An error occurred during login. Please try again later.';
+        error: (errorMessage: string) => {
+          console.error('Login error', errorMessage);
+          this.loginError = errorMessage;
+          
+          if (errorMessage === 'User account is not enabled. Activation email has been sent.') {
+            setTimeout(() => {
+              this.router.navigate(['/activate']);
+            }, 2000);
           }
         }
       });
+    } else {
+      this.validateAllFormFields();
     }
+  }
+
+  private validateAllFormFields() {
+    Object.keys(this.loginForm.controls).forEach(field => {
+      const control = this.loginForm.get(field);
+      control?.markAsTouched({ onlySelf: true });
+    });
   }
 }

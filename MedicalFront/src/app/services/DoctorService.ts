@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable, tap, catchError, throwError } from 'rxjs';
+import { Observable, tap, catchError, throwError, map } from 'rxjs';
 import { AuthService } from './authService'; // Assuming AuthService is in the same directory
 import { Doctor } from '../models/doctor.model';
+import { HttpEvent, HttpEventType } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -21,34 +22,10 @@ export class DoctorService {
     });
   }
 
-  
-
   getDoctorPatients(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/patients`, { headers: this.getHeaders() })
       .pipe(
         catchError(this.handleError)
-      );
-  }
-
-  updateDoctor(doctorData: any): Observable<Doctor> {
-    console.log('Sending update request:', JSON.stringify(doctorData, null, 2));
-    return this.http.put<Doctor>(`${this.apiUrl}/updateData`, doctorData, { headers: this.getHeaders() })
-      .pipe(
-        tap(response => {
-          console.log('Update response:', JSON.stringify(response, null, 2));
-          // Log each field separately using type-safe property access
-          Object.keys(response).forEach(key => {
-            console.log(`${key}:`, (response as any)[key]);
-          });
-        }),
-        catchError(error => {
-          console.error('Error in updateDoctor:', error);
-          if (error.error instanceof Array) {
-            const errorMessages = error.error.map((err: any) => err.defaultMessage).join(', ');
-            return throwError(() => new Error(`${error.status} ${error.statusText}: ${errorMessages}`));
-          }
-          return throwError(() => new Error(`${error.status} ${error.statusText}: ${JSON.stringify(error.error)}`));
-        })
       );
   }
 
@@ -74,10 +51,15 @@ export class DoctorService {
   }
 
   verifyDoctor(verificationData: FormData): Observable<Doctor> {
-    return this.http.post<Doctor>(`${this.apiUrl}/verifyDoctor`, verificationData, { headers: this.getHeaders() })
-      .pipe(
-        catchError(this.handleError)
-      );
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+
+    return this.http.post<Doctor>(`${this.apiUrl}/verifyDoctor`, verificationData, { 
+      headers: headers
+    }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   private handleError = (error: HttpErrorResponse) => {

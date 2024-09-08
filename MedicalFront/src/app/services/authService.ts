@@ -11,7 +11,7 @@ import { jwtDecode } from 'jwt-decode';
 export class AuthService {
   private apiUrl = 'http://localhost:8088/api/v1/auth';
   private tokenKey = 'auth_token';
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
   private currentUserSubject = new BehaviorSubject<any>(null);
   public currentUser = this.currentUserSubject.asObservable();
@@ -79,9 +79,29 @@ export class AuthService {
           console.log('Token set:', response.token);
         } else {
           console.error('Invalid response structure');
+          throw new Error('Invalid response structure');
         }
       }),
-      catchError(this.handleError)
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = 'An unexpected error occurred';
+        if (error.error instanceof ErrorEvent) {
+          // Client-side error
+          errorMessage = error.error.message;
+        } else {
+          // Server-side error
+          if (typeof error.error === 'string') {
+            errorMessage = error.error;
+          } else if (error.status === 401) {
+            errorMessage = 'Invalid email or password';
+          } else if (error.status === 404) {
+            errorMessage = 'User not found';
+          } else if (error.status === 403) {
+            errorMessage = 'User account is not enabled. Activation email has been sent.';
+          }
+        }
+        console.error('Login error:', errorMessage);
+        return throwError(() => errorMessage);
+      })
     );
   }
 
@@ -144,19 +164,21 @@ export class AuthService {
   }
 
   private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'An error occurred';
+    let errorMessage = 'An unexpected error occurred';
     if (error.error instanceof ErrorEvent) {
       // Client-side error
-      errorMessage = `Client-side error: ${error.error.message}`;
-    } else if (error.status === 0) {
-      // Network error
-      errorMessage = 'Network error: Please check your internet connection and try again.';
+      errorMessage = error.error.message;
     } else {
       // Server-side error
-      errorMessage = `Server-side error: ${error.status}\nMessage: ${error.message}`;
+      if (typeof error.error === 'string') {
+        errorMessage = error.error;
+      } else if (error.status === 401) {
+        errorMessage = 'Invalid email or password';
+      } else if (error.status === 404) {
+        errorMessage = 'User not found';
+      }
     }
-    console.error(errorMessage);
-    return throwError(() => new Error(errorMessage));
+    return throwError(() => errorMessage);
   }
 
   setToken(token: string): void {

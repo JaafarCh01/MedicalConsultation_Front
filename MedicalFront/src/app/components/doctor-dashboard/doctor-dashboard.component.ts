@@ -5,6 +5,8 @@ import { AuthService } from '../../services/authService';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Doctor } from '../../models/doctor.model';
+import { MedicalCategories } from '../../models/medical-categories';
+import { MedicalCategoriesDisplay } from '../../models/medical-categories-display';
 
 @Component({
   selector: 'app-doctor-dashboard',
@@ -15,12 +17,12 @@ import { Doctor } from '../../models/doctor.model';
 })
 export class DoctorDashboardComponent implements OnInit {
   appointments: any[] = [];
-  doctorProfile: any;
-  profileForm: FormGroup;
-  missingAttributes: string[] = [];
+  doctorProfile: Doctor | null = null;
+  verificationForm: FormGroup;
   activeSection: string = 'appointments';
-  isProfileComplete: boolean = false;
-  showProfileForm: boolean = false;
+  isVerified: boolean = false;
+  medicalCategories = Object.values(MedicalCategories);
+  medicalCategoriesDisplay = MedicalCategoriesDisplay;
 
   constructor(
     private doctorService: DoctorService,
@@ -28,14 +30,12 @@ export class DoctorDashboardComponent implements OnInit {
     private formBuilder: FormBuilder,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.profileForm = this.formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+    this.verificationForm = this.formBuilder.group({
       speciality: ['', Validators.required],
       education: ['', Validators.required],
       workPlace: ['', Validators.required],
       position: ['', Validators.required],
-      workExperienceYears: ['', Validators.required],
+      workExperienceYears: ['', [Validators.required, Validators.min(0)]],
       awards: [''],
       contactPhone: ['', Validators.required],
       contactEmail: ['', [Validators.required, Validators.email]],
@@ -44,85 +44,70 @@ export class DoctorDashboardComponent implements OnInit {
       workExperienceDetails: [''],
       furtherTraining: [''],
       achievementsAndAwards: [''],
-      scientificWorks: ['']
+      scientificWorks: [''],
+      certificates: [null]
     });
   }
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
- 
+      this.loadDoctorProfile();
     }
   }
-
 
   loadDoctorProfile() {
     this.doctorService.getDoctorProfile().subscribe({
       next: (doctor: Doctor) => {
         this.doctorProfile = doctor;
-        this.profileForm.patchValue({
-          firstName: doctor.firstName,
-          lastName: doctor.lastName,
-          email: doctor.email,
-          dateOfBirth: doctor.dateOfBirth,
-          city: doctor.city,
-          gender: doctor.gender,
-          speciality: doctor.speciality,
-          education: doctor.education,
-          workPlace: doctor.workPlace,
-          position: doctor.position,
-          workExperienceYears: doctor.workExperienceYears,
-          awards: doctor.awards,
-          contactPhone: doctor.contactPhone,
-          contactEmail: doctor.contactEmail,
-          aboutMe: doctor.aboutMe,
-          specializationDetails: doctor.specializationDetails,
-          workExperienceDetails: doctor.workExperienceDetails,
-          furtherTraining: doctor.furtherTraining,
-          achievementsAndAwards: doctor.achievementsAndAwards,
-          scientificWorks: doctor.scientificWorks
-        });
-        this.checkMissingAttributes();
+        this.isVerified = doctor.verified;
+        if (this.isVerified) {
+          this.verificationForm.patchValue(doctor);
+        }
       },
       error: (error: any) => {
         console.error('Error loading doctor profile:', error);
-        if (error.status === 403) {
-          // Handle forbidden error (e.g., redirect to login or show message)
-          console.log('User role:', this.authService.getUserRole());
-        }
       }
     });
   }
 
-  checkMissingAttributes() {
-    this.missingAttributes = Object.keys(this.profileForm.controls).filter(
-      key => !this.profileForm.get(key)?.value && this.profileForm.get(key)?.validator
-    );
+  onFileChange(event: any) {
+    const files = event.target.files;
+    this.verificationForm.patchValue({
+      certificates: files
+    });
   }
 
-  updateProfile() {
-    if (!this.authService.isAuthenticated()) {
-      console.error('User is not authenticated');
-      // Handle unauthenticated user (e.g., redirect to login)
-      return;
-    }
+  submitVerification() {
+    if (this.verificationForm.valid) {
+      const formData = new FormData();
+      const formValue = this.verificationForm.value;
+      
+      // Create a new object without the certificates field
+      const dataWithoutCertificates = { ...formValue };
+      delete dataWithoutCertificates.certificates;
 
-    if (this.profileForm.valid) {
-      console.log('Full form data:', this.profileForm.value);
-      this.doctorService.updateDoctor(this.profileForm.value).subscribe({
-        next: (updatedDoctor: Doctor) => {
-          this.doctorProfile = updatedDoctor;
-          this.checkMissingAttributes();
-          console.log('Profile updated successfully', updatedDoctor);
+      // Append form data as JSON
+      formData.append('data', new Blob([JSON.stringify(dataWithoutCertificates)], {
+        type: "application/json"
+      }));
+
+      // Append certificates
+      if (formValue.certificates) {
+        for (let i = 0; i < formValue.certificates.length; i++) {
+          formData.append('certificates', formValue.certificates[i]);
+        }
+      }
+
+      this.doctorService.verifyDoctor(formData).subscribe({
+        next: (response: Doctor) => {
+          this.doctorProfile = response;
+          this.isVerified = true;
+          console.log('Verification successful', response);
         },
         error: (error: any) => {
-          console.error('Error updating doctor profile:', error);
-          // You can add user-friendly error handling here, e.g., showing an error message to the user
-          // For example:
-          // this.errorMessage = `Failed to update profile: ${error.message}`;
+          console.error('Error during verification:', error);
         }
       });
-    } else {
-      console.log('Form is invalid', this.profileForm.errors);
     }
   }
 
@@ -131,17 +116,6 @@ export class DoctorDashboardComponent implements OnInit {
     if (section === 'profile') {
       this.loadDoctorProfile();
     }
-  }
-
-  validateAllFormFields(formGroup: FormGroup) {
-    Object.keys(formGroup.controls).forEach(field => {
-      const control = formGroup.get(field);
-      if (control instanceof FormGroup) {
-        this.validateAllFormFields(control);
-      } else {
-        control?.markAsTouched({ onlySelf: true });
-      }
-    });
   }
 
   formatFieldName(fieldName: string): string {

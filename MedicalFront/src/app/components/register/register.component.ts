@@ -1,132 +1,147 @@
-import { Component } from "@angular/core";
-import { Router } from "@angular/router";
-import { CommonModule } from "@angular/common";
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from "@angular/forms";
-import { RegistrationService } from "../../services/RegistrationService";
-import { RegistrationRequest } from "../../models/registration-request.model";
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { RegistrationService } from '../../services/RegistrationService';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: "app-register",
+  selector: 'app-register',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule],
-  templateUrl: "./register.component.html",
-  styleUrls: ["./register.component.css"],
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.css']
 })
-export class RegisterComponent {
-  selectedRole: string | null = null;
-  registrationSuccess: string | null = null;
-  registrationError: string | null = null;
-
+export class RegisterComponent implements OnInit {
   doctorForm: FormGroup;
   patientForm: FormGroup;
   organizationForm: FormGroup;
+  registrationError: any = {};
+  registrationSuccess: string | null = null;
+  activeForm: 'doctor' | 'patient' | 'organization' = 'doctor';
 
-  constructor(
-    private router: Router,
-    private registrationService: RegistrationService,
-    private fb: FormBuilder,
-  ) {
+  constructor(private fb: FormBuilder, private registrationService: RegistrationService, private router: Router) {
     this.doctorForm = this.fb.group({
-      firstName: ["", [Validators.required, Validators.minLength(1)]],
-      lastName: ["", [Validators.required, Validators.minLength(1)]],
-      email: ["", [Validators.required, Validators.email]],
-      password: ["", [Validators.required, Validators.minLength(8)]],
-      dateOfBirth: ["", [Validators.required]],
-      city: ["", [Validators.required]],
-      gender: ['', [Validators.required]],
+      firstName: [''],
+      lastName: [''],
+      email: [''],
+      password: [''],
+      dateOfBirth: [''],
+      city: [''],
+      gender: ['']
     });
 
     this.patientForm = this.fb.group({
-      firstName: ["", [Validators.required, Validators.minLength(1)]],
-      lastName: ["", [Validators.required, Validators.minLength(1)]],
-      email: ["", [Validators.required, Validators.email]],
-      password: ["", [Validators.required, Validators.minLength(8)]],
-      dateOfBirth: ["", [Validators.required]],
-      city: ["", [Validators.required]],
-      gender: ['', [Validators.required]],
+      firstName: [''],
+      lastName: [''],
+      email: [''],
+      password: [''],
+      dateOfBirth: [''],
+      city: [''],
+      gender: ['']
     });
 
     this.organizationForm = this.fb.group({
-      firstName: ["", [Validators.required, Validators.minLength(1)]],
-      lastName: ["", [Validators.required, Validators.minLength(1)]],
-      email: ["", [Validators.required, Validators.email]],
-      password: ["", [Validators.required, Validators.minLength(8)]],
-      dateOfBirth: ["", [Validators.required]],
-      city: ["", [Validators.required]],
-      gender: ['', [Validators.required]],
+      organizationName: [''],
+      email: [''],
+      password: [''],
+      city: [''],
+      address: [''],
+      phoneNumber: ['']
     });
   }
 
-  selectRole(role: string) {
-    this.selectedRole = role;
-    this.registrationSuccess = null; // Reset success message when selecting a role
+  ngOnInit(): void {}
+
+  setActiveForm(form: 'doctor' | 'patient' | 'organization') {
+    this.activeForm = form;
+    this.registrationError = {};
+    this.registrationSuccess = null;
   }
 
   registerDoctor() {
-    if (this.doctorForm.valid) {
-      const registrationRequest: RegistrationRequest = this.doctorForm.value;
-      this.registrationService.registerDoctor(registrationRequest).subscribe({
-        next: (response) => {
-          console.log("Doctor registered successfully", response);
-          this.registrationSuccess = "Doctor registration complete!";
-          this.doctorForm.reset();
-        },
-        error: (error) => {
-          console.error("Error registering doctor", error);
-          this.registrationError = "Error registering doctor: " + error.message;
-        },
-      });
-    } else {
-      console.log("Doctor form is invalid", this.doctorForm.errors);
-    }
+    this.registrationService.registerDoctor(this.doctorForm.value).subscribe(
+      (response) => this.handleRegistrationSuccess(),
+      (error) => this.handleRegistrationError(error)
+    );
   }
 
   registerPatient() {
-    if (this.patientForm.valid) {
-      const registrationRequest: RegistrationRequest = this.patientForm.value;
-      this.registrationService.registerPatient(registrationRequest).subscribe({
-        next: (response) => {
-          console.log("Patient registered successfully", response);
-          this.registrationSuccess = "Patient registration complete!";
-          this.patientForm.reset();
-        },
-        error: (error) => {
-          console.error("Error registering patient", error);
-          if (error.error instanceof ErrorEvent) {
-            // Client-side error
-            this.registrationError = `Error: ${error.error.message}`;
-          } else {
-            // Server-side error
-            this.registrationError = `Error Code: ${error.status}\nMessage: ${error.message}`;
-          }
-        },
-      });
-    } else {
-      console.log("Patient form is invalid", this.patientForm.errors);
-    }
+    this.registrationService.registerPatient(this.patientForm.value).subscribe(
+      (response) => this.handleRegistrationSuccess(),
+      (error) => this.handleRegistrationError(error)
+    );
   }
 
   registerOrganization() {
-    if (this.organizationForm.valid) {
-      const registrationRequest: RegistrationRequest = this.organizationForm.value;
-      this.registrationService.registerOrganization(registrationRequest).subscribe({
-        next: (response) => {
-          console.log("Organization registered successfully", response);
-          this.registrationSuccess = "Organization registration complete!";
-          this.organizationForm.reset();
-        },
-        error: (error) => {
-          console.error("Error registering organization", error);
-        },
-      });
+    this.registrationService.registerOrganization(this.organizationForm.value).subscribe(
+      (response) => this.handleRegistrationSuccess(),
+      (error) => this.handleRegistrationError(error)
+    );
+  }
+
+  private handleRegistrationSuccess() {
+    this.registrationSuccess = 'Registration successful. Redirecting to activation page...';
+    this.registrationError = {};
+    this.resetForms();
+    setTimeout(() => {
+      this.router.navigate(['/activate']);
+    }, 2000); // Wait for 2 seconds before redirecting
+  }
+
+  private resetForms() {
+    this.doctorForm.reset();
+    this.patientForm.reset();
+    this.organizationForm.reset();
+  }
+
+  private handleRegistrationError(error: any) {
+    this.registrationSuccess = null;
+    this.registrationError = {};
+
+    if (error.error && error.error.validationErrors) {
+      this.handleValidationErrors(error.error.validationErrors);
+    } else if (error.error && error.error.error) {
+      this.registrationError.general = error.error.error;
+    } else if (error.error && error.error.businessErrorDescription) {
+      this.registrationError.general = error.error.businessErrorDescription;
     } else {
-      console.log("Organization form is invalid", this.organizationForm.errors);
+      this.registrationError.general = 'An unexpected error occurred. Please try again.';
+    }
+  }
+
+  private handleValidationErrors(validationErrors: string[]) {
+    const fieldMap: { [key: string]: string } = {
+      'First Name': 'firstName',
+      'Last Name': 'lastName',
+      'Date of Birth': 'dateOfBirth',
+      'Email': 'email',
+      'Password': 'password',
+      'City': 'city',
+      'Gender': 'gender',
+      'Organization Name': 'organizationName',
+      'Address': 'address',
+      'Phone Number': 'phoneNumber'
+    };
+
+    validationErrors.forEach((errorMsg: string) => {
+      for (const [key, value] of Object.entries(fieldMap)) {
+        if (errorMsg.includes(key)) {
+          this.registrationError[value] = errorMsg;
+          this.getActiveForm().get(value)?.setErrors({ serverError: errorMsg });
+          break;
+        }
+      }
+    });
+  }
+
+  private getActiveForm(): FormGroup {
+    switch (this.activeForm) {
+      case 'doctor':
+        return this.doctorForm;
+      case 'patient':
+        return this.patientForm;
+      case 'organization':
+        return this.organizationForm;
     }
   }
 }
