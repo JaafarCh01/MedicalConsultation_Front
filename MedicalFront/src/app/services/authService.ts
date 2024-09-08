@@ -1,9 +1,10 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError, BehaviorSubject } from 'rxjs';
+import { Observable, throwError, BehaviorSubject, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { isPlatformBrowser } from '@angular/common';
 import { jwtDecode } from 'jwt-decode';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -105,7 +106,27 @@ export class AuthService {
     );
   }
 
-  logout() {
+  logout(): Observable<any> {
+    const token = this.getToken();
+    if (!token) {
+      return of(null).pipe(tap(() => this.clearLocalData()));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.get(`${this.apiUrl}/logout`, { headers: headers }).pipe(
+      tap(() => this.clearLocalData()),
+      catchError(error => {
+        console.error('Logout error:', error);
+        this.clearLocalData();
+        return throwError(() => 'Logout failed');
+      })
+    );
+  }
+
+  private clearLocalData(): void {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem(this.tokenKey);
       localStorage.removeItem('userRole');

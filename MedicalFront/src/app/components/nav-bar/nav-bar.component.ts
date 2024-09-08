@@ -60,9 +60,18 @@ export class NavBarComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/']);
-    this.isDropdownOpen = false;
+    this.authService.logout().subscribe({
+      next: () => {
+        console.log('Logout successful');
+        this.router.navigate(['/']);
+      },
+      error: (error) => {
+        console.error('Logout failed:', error);
+      },
+      complete: () => {
+        this.isDropdownOpen = false;
+      }
+    });
   }
 
   toggleDropdown() {
