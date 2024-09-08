@@ -5,10 +5,10 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <app-organization-card
         *ngFor="let organization of filteredOrganizations"
-        [name]="organization.name"
-        [type]="organization.type"
-        [city]="organization.city"
-        [address]="organization.address"
+        [name]="organization.organizationName"
+        [type]="organization.typeOfInstitution"
+        [city]="organization.facilityCity"
+        [address]="organization.facilityAddress"
       ></app-organization-card>
     </div>
     <div class="mt-8 flex justify-center">

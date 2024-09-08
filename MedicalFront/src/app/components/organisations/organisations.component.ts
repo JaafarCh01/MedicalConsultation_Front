@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { OrganizationCardComponent } from '../../components/organization-card/organization-card.component';
 import { SearchComponent } from '../../components/search/search.component';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
+import { OrganizationService } from '../../services/OrganizationService';
+import { Organization } from '../../models/organization.model';
 
 @Component({
   selector: 'app-organisations',
@@ -12,22 +14,28 @@ import { PaginationComponent } from '../../components/pagination/pagination.comp
   styleUrls: ['./organisations.component.css']
 })
 export class OrganizationsComponent implements OnInit {
-  organizations = [
-    { name: 'Organization 1', type: 'Hospital', city: 'City 1', address: 'Address 1' },
-    { name: 'Organization 2', type: 'Clinic', city: 'City 2', address: 'Address 2' },
-    { name: 'Organization 3', type: 'Health Center', city: 'City 3', address: 'Address 3' },
-    { name: 'Organization 4', type: 'Hospital', city: 'City 4', address: 'Address 4' },
-    { name: 'Organization 5', type: 'Clinic', city: 'City 5', address: 'Address 5' },
-    { name: 'Organization 6', type: 'Health Center', city: 'City 6', address: 'Address 6' },
-  ];
-
-  filteredOrganizations: any[] = [];
+  organizations: Organization[] = [];
+  filteredOrganizations: Organization[] = [];
   currentPage = 1;
   pageSize = 6;
   totalPages = 1;
 
+  constructor(private organizationService: OrganizationService) {}
+
   ngOnInit() {
-    this.filterOrganizations();
+    this.fetchOrganizations();
+  }
+
+  fetchOrganizations() {
+    this.organizationService.getAllOrganizations().subscribe({
+      next: (organizations) => {
+        this.organizations = organizations;
+        this.filterOrganizations();
+      },
+      error: (error) => {
+        console.error('Error fetching organizations:', error);
+      }
+    });
   }
 
   onSearch(searchTerm: string) {
@@ -43,13 +51,13 @@ export class OrganizationsComponent implements OnInit {
 
     if (searchTerm) {
       filtered = filtered.filter(org => 
-        org.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        org.type.toLowerCase().includes(searchTerm.toLowerCase())
+        org.organizationName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        org.typeOfInstitution.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     if (type && type !== 'All') {
-      filtered = filtered.filter(org => org.type === type);
+      filtered = filtered.filter(org => org.typeOfInstitution === type);
     }
 
     this.filteredOrganizations = filtered;

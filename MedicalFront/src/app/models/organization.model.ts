@@ -9,4 +9,5 @@ export interface Organization {
   schedule: string;
   website: string;
   facilityEmailAddress: string;
+  verified: boolean;
 }

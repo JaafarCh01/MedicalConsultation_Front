@@ -35,6 +35,13 @@ export class OrganizationService {
       );
   }
 
+  getAllOrganizations(): Observable<Organization[]> {
+    return this.http.get<Organization[]>(`${this.apiUrl}/all`, { headers: this.getHeaders() })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   private handleError(error: any) {
     console.error('An error occurred:', error);
     let errorMessage = 'An unknown error occurred';
