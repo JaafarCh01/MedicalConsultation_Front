@@ -1,9 +1,66 @@
-<h2>Questions</h2>
-<ul>
-  <li *ngFor="let question of questions">
-    <h3>{{ question.title }}</h3>
-    <p>Category: {{ question.category }}</p>
-    <p>{{ question.description }}</p>
-    <a [routerLink]="['/question', question.id]">View Details</a>
-  </li>
-</ul>
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-4xl font-bold mb-8">MediConsul</h1>
+
+  <button (click)="toggleAskQuestion()" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300 mb-4">
+    {{ showAskQuestion ? 'Hide Ask Question' : 'Show Ask Question' }}
+  </button>
+
+  <div *ngIf="showAskQuestion" class="bg-white rounded-lg shadow-md p-6 mb-6">
+    <h2 class="text-2xl font-bold mb-4">Ask a Question</h2>
+    <form [formGroup]="questionForm" (ngSubmit)="onSubmit()">
+      <div class="mb-4">
+        <select formControlName="category" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="">Select a category</option>
+          <option value="INTERNAL_MEDICINE">Internal Medicine</option>
+          <option value="PEDIATRICS">Pediatrics</option>
+          <!-- Add more options based on your MedicalCategories enum -->
+        </select>
+      </div>
+      <div class="mb-4">
+        <input type="text" formControlName="title" placeholder="Title" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+      </div>
+      <div class="mb-4">
+        <textarea formControlName="description" placeholder="Description" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3"></textarea>
+      </div>
+      <div class="mb-4">
+        <input type="text" formControlName="keyword" placeholder="Keyword" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+      </div>
+      <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300">Submit Question</button>
+    </form>
+  </div>
+
+  <div *ngFor="let question of questions" class="bg-white rounded-lg shadow-md p-6 mb-4">
+    <div class="flex justify-between items-center">
+      <div class="flex-grow">
+        <h3 class="text-xl font-semibold mb-2">{{ question.title }}</h3>
+        <p class="text-gray-600 mb-2">Asked by: {{ question.patient?.name || 'Anonymous' }}</p>
+        <p class="text-gray-700">{{ question.description }}</p>
+      </div>
+      <div class="ml-4 flex-shrink-0">
+        <button *ngIf="isDoctor && (!question.answers || question.answers.length === 0)" 
+                (click)="toggleAnswerForm(question)" 
+                class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300">
+          Answer
+        </button>
+        <button *ngIf="question.answers && question.answers.length > 0" 
+                (click)="toggleAnswerView(question)" 
+                class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition duration-300">
+          {{ question.showAnswer ? 'Hide Answer' : 'View Answer' }}
+        </button>
+      </div>
+    </div>
+    
+    <div *ngIf="isDoctor && question.showAnswerForm" class="mt-4">
+      <form [formGroup]="answerForm" (ngSubmit)="onSubmitAnswer(question.id)">
+        <textarea formControlName="content" placeholder="Your answer" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3"></textarea>
+        <button type="submit" class="mt-2 bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition duration-300">Submit Answer</button>
+      </form>
+    </div>
+
+    <div *ngIf="question.showAnswer && question.answers && question.answers.length > 0" class="mt-4 bg-gray-100 p-4 rounded-lg">
+      <p class="font-semibold">Answer:</p>
+      <p>{{ question.answers[0].content }}</p>
+      <p class="text-sm text-gray-600 mt-2">Answered by: {{ question.answers[0].doctor?.name || 'Anonymous Doctor' }}</p>
+    </div>
+  </div>
+</div>

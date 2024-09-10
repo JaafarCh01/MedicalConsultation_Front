@@ -30,7 +30,11 @@ export class QuestionService {
   }
 
   answerQuestion(answer: any): Observable<any> {
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('token')}`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.authService.getToken()}`);
     return this.http.post(`${this.apiUrl}/doctor/answerQuestion`, answer, { headers });
+  }
+
+  getCategories(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/categories`);
   }
 }
