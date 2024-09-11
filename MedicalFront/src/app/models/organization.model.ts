@@ -1,7 +1,8 @@
+import { OrganizationTypes } from "./organization-types";
+
 export interface Organization {
-  id: number;
   organizationName: string;
-  typeOfInstitution: string;
+  typeOfInstitution: OrganizationTypes;
   description: string;
   facilityCity: string;
   facilityAddress: string;
@@ -10,4 +11,5 @@ export interface Organization {
   website: string;
   facilityEmailAddress: string;
   verified: boolean;
+  [key: string]: any;
 }

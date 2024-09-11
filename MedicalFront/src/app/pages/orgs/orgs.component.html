@@ -1,18 +1,18 @@
 <div class="container mx-auto px-4 py-8 mt-24">
   <app-search 
     [categories]="searchCategories" 
-    [placeholder]="'Search for doctors or specialties'"
+    [placeholder]="'Search for organizations'"
     (searchEvent)="onSearch($event)" 
     (filterEvent)="onFilter($event)"
   ></app-search>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    <app-docard
-      *ngFor="let doctor of displayedDoctors"
-      [image]="doctor.profilePicture || ''"
-      [name]="doctor.firstName + ' ' + doctor.lastName"
-      [price]="(doctor.consultationFee | currency) ?? ''"
-      [specialty]="doctor.speciality"
-    ></app-docard>
+    <app-orgcard
+      *ngFor="let organization of displayedOrganizations"
+      [name]="organization.organizationName"
+      [type]="organization.typeOfInstitution"
+      [description]="organization.description"
+      [facilityCity]="organization.facilityCity"
+    ></app-orgcard>
   </div>
   <app-pagination
     [currentPage]="currentPage"

@@ -1,24 +1,34 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { OrganizationCardComponent } from '../../components/organization-card/organization-card.component';
 import { SearchComponent } from '../../components/search/search.component';
+import { OrgcardComponent } from '../../components/orgcard/orgcard.component';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
+import { CommonModule } from '@angular/common';
 import { OrganizationService } from '../../services/OrganizationService';
 import { Organization } from '../../models/organization.model';
+import { OrganizationTypes } from '../../models/organization-types';
+import { OrganizationTypesDisplay } from '../../models/organization-types-display';
 
 @Component({
-  selector: 'app-organisations',
+  selector: 'app-orgs',
   standalone: true,
-  imports: [OrganizationCardComponent, SearchComponent, PaginationComponent, CommonModule],
-  templateUrl: './organisations.component.html',
-  styleUrls: ['./organisations.component.css']
+  imports: [OrgcardComponent, SearchComponent, PaginationComponent, CommonModule],
+  templateUrl: './orgs.component.html',
+  styleUrl: './orgs.component.css'
 })
-export class OrganizationsComponent implements OnInit {
+export class OrgsComponent implements OnInit {
   organizations: Organization[] = [];
   filteredOrganizations: Organization[] = [];
+  displayedOrganizations: Organization[] = [];
   currentPage = 1;
   pageSize = 6;
   totalPages = 1;
+  searchCategories: { key: string, value: string }[] = [
+    { key: 'All', value: 'All Organizations' },
+    ...Object.entries(OrganizationTypesDisplay).map(([key, value]) => ({
+      key: key,
+      value: value
+    }))
+  ];
 
   constructor(private organizationService: OrganizationService) {}
 
@@ -39,21 +49,24 @@ export class OrganizationsComponent implements OnInit {
   }
 
   onSearch(searchTerm: string) {
+    this.currentPage = 1;
     this.filterOrganizations(searchTerm);
   }
 
   onFilter(type: string) {
-    this.filterOrganizations(undefined, type);
+    this.currentPage = 1;
+    this.filterOrganizations(undefined, type as OrganizationTypes | 'All');
   }
 
-  filterOrganizations(searchTerm?: string, type?: string) {
-    let filtered = this.organizations;
+  filterOrganizations(searchTerm?: string, type?: OrganizationTypes | 'All') {
+    let filtered = this.organizations.filter(org => org.verified === true);
 
     if (searchTerm) {
-      filtered = filtered.filter(org => 
-        org.organizationName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        org.typeOfInstitution.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      const lowerCaseSearchTerm = searchTerm.toLowerCase();
+      filtered = filtered.filter(org => {
+        return org.organizationName.toLowerCase().includes(lowerCaseSearchTerm) ||
+               OrganizationTypesDisplay[org.typeOfInstitution].toLowerCase().includes(lowerCaseSearchTerm);
+      });
     }
 
     if (type && type !== 'All') {
@@ -62,14 +75,13 @@ export class OrganizationsComponent implements OnInit {
 
     this.filteredOrganizations = filtered;
     this.totalPages = Math.ceil(this.filteredOrganizations.length / this.pageSize);
-    this.currentPage = 1;
     this.updatePagedOrganizations();
   }
 
   updatePagedOrganizations() {
     const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
-    this.filteredOrganizations = this.filteredOrganizations.slice(startIndex, endIndex);
+    this.displayedOrganizations = this.filteredOrganizations.slice(startIndex, endIndex);
   }
 
   onPageChange(page: number) {
@@ -77,3 +89,4 @@ export class OrganizationsComponent implements OnInit {
     this.updatePagedOrganizations();
   }
 }
+

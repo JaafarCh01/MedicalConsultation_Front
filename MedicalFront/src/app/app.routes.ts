@@ -10,11 +10,11 @@ import { DoctorDashboardComponent } from './components/doctor-dashboard/doctor-d
 import { PatientDashboardComponent } from './components/patient-dashboard/patient-dashboard.component';
 import { OrganizationDashboardComponent } from './components/organization-dashboard/organization-dashboard.component';
 import { ArticlesComponent } from "./pages/articles/articles.component";
-import { OrganizationsComponent } from "./components/organisations/organisations.component";
 import { ArticleDetailComponent } from "./components/article-detail/article-detail.component";
 import { AskQuestionComponent } from './components/ask-question/ask-question.component';
 import { QuestionListComponent } from './components/question-list/question-list.component';
 import { QuestionDetailComponent } from './components/question-detail/question-detail.component';
+import { OrgsComponent } from './pages/orgs/orgs.component';
 
 export const routes: Routes = [
     {path: '', component: HomePageComponent},
@@ -28,9 +28,9 @@ export const routes: Routes = [
     {path: 'doctor-dashboard', component: DoctorDashboardComponent},
     {path: 'patient-dashboard', component: PatientDashboardComponent},
     {path: 'organization-dashboard', component: OrganizationDashboardComponent},
-    {path: 'organizations', component: OrganizationsComponent},
     { path: 'article/:id', component: ArticleDetailComponent },
     { path: 'ask-question', component: AskQuestionComponent },
     { path: 'questions', component: QuestionListComponent },
-    { path: 'question/:id', component: QuestionDetailComponent }
+    { path: 'question/:id', component: QuestionDetailComponent },
+    { path: 'organizations', component: OrgsComponent }
 ];

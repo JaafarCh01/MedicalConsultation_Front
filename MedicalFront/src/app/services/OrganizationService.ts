@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { Organization } from '../models/organization.model';
@@ -21,17 +21,17 @@ export class OrganizationService {
     });
   }
 
-  updateOrganization(organizationData: any): Observable<Organization> {
-    console.log('Sending update request:', JSON.stringify(organizationData, null, 2));
-    return this.http.put<Organization>(`${this.apiUrl}/updateData`, organizationData, { headers: this.getHeaders() })
+  verifyOrganization(verificationData: any): Observable<Organization> {
+    return this.http.post<Organization>(`${this.apiUrl}/verifyOrganization`, verificationData, { headers: this.getHeaders() })
       .pipe(
-        tap(response => {
-          console.log('Update response:', JSON.stringify(response, null, 2));
-        }),
-        catchError(error => {
-          console.error('Error in updateOrganization:', error);
-          return throwError(() => new Error(`${error.status} ${error.statusText}: ${JSON.stringify(error.error)}`));
-        })
+        catchError(this.handleError)
+      );
+  }
+
+  getOrganizationProfile(): Observable<Organization> {
+    return this.http.get<Organization>(`${this.apiUrl}/profile`, { headers: this.getHeaders() })
+      .pipe(
+        catchError(this.handleError)
       );
   }
 
@@ -42,19 +42,8 @@ export class OrganizationService {
       );
   }
 
-  private handleError(error: any) {
+  private handleError = (error: HttpErrorResponse) => {
     console.error('An error occurred:', error);
-    let errorMessage = 'An unknown error occurred';
-    if (error.error instanceof ErrorEvent) {
-      // Client-side error
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // Server-side error
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-      if (error.error) {
-        errorMessage += `\nDetails: ${JSON.stringify(error.error)}`;
-      }
-    }
-    return throwError(() => new Error(errorMessage));
+    return throwError(() => new Error(`${error.status} ${error.statusText}: ${error.message}`));
   }
 }

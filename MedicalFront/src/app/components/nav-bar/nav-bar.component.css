@@ -23,7 +23,21 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 64px; /* Adjust this value based on your navbar's actual height */
+  height: 80px; /* Set a fixed height for the navbar */
   z-index: 1000;
   background-color: white;
+}
+
+nav {
+  height: 100%; /* Make the nav element fill the fixed-nav container */
+}
+
+.flex.items-center {
+  height: 100%; /* Ensure the logo container takes full height */
+}
+
+img {
+  max-height: 100px; /* Increase the maximum height */
+  width: auto; /* Maintain aspect ratio */
+  object-fit: contain; /* Ensure the entire image fits within the dimensions */
 }

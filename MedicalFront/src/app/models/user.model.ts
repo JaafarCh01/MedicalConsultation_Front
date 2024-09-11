@@ -1,3 +1,4 @@
+import { Gender } from "./registration-request.model";
 import { Role } from "./role.model";
 
 export interface User {
@@ -7,12 +8,12 @@ export interface User {
   dateOfBirth: Date;
   email: string;
   city: string;
-  gender: string;
+  gender: Gender;
   roles: Role[];
   accountLocked: boolean;
   enabled: boolean;
   verified: boolean;
-  profileImage: string; // This will be a base64 encoded string in the frontend
+  profileImage?: string; // This will be a base64 encoded string in the frontend
   createdDate: Date;
   lastModifiedDate: Date;
 }

@@ -46,9 +46,9 @@ export class DocsComponent implements OnInit {
     this.filterDoctors(searchTerm);
   }
 
-  onFilter(specialty: MedicalCategories | 'All') {
+  onFilter(specialty: string) {
     this.currentPage = 1;
-    this.filterDoctors(undefined, specialty);
+    this.filterDoctors(undefined, specialty as MedicalCategories | 'All');
   }
 
   filterDoctors(searchTerm?: string, specialty?: MedicalCategories | 'All') {
@@ -86,4 +86,13 @@ export class DocsComponent implements OnInit {
     this.currentPage = page;
     this.updatePagedDoctors();
   }
+
+  searchCategories: { key: string, value: string }[] = [
+    { key: 'All', value: 'All Specialties' },
+    ...Object.entries(MedicalCategoriesDisplay).map(([key, value]) => ({
+      key: key,
+      value: value
+    }))
+  ];
 }
+

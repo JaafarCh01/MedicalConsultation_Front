@@ -1,63 +1,93 @@
-<div class="flex h-screen bg-gray-100 mt-16">
-  <!-- Sidebar -->
-  <div class="w-64 bg-white shadow-md">
-    <div class="p-6">
-      <h1 class="text-2xl font-bold text-gray-800">Organization Dashboard</h1>
-    </div>
-    <nav class="mt-6">
-      <a (click)="changeSection('dashboard')" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-500 hover:text-white cursor-pointer">Dashboard</a>
-      <a (click)="changeSection('profile')" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-500 hover:text-white cursor-pointer">Profile</a>
-      <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-500 hover:text-white">Settings</a>
-    </nav>
-  </div>
-
-  <!-- Main content -->
-  <div class="flex-1 p-10 mt-20">
-    <div class="max-w-3xl mx-auto">
-      <!-- Dashboard Section -->
-      <div *ngIf="activeSection === 'dashboard'">
-        <h2 class="text-3xl font-semibold mb-6 text-gray-700">Welcome to your organization dashboard</h2>
-        <p>Here you can manage your organization's information and settings.</p>
+<div class="flex flex-col min-h-screen bg-gray-100">
+  <div class="flex flex-grow mt-16">
+    <!-- Sidebar -->
+    <div class="w-64 bg-white shadow-md">
+      <div class="p-6">
+        <h1 class="text-2xl font-bold text-gray-800">Organization Dashboard</h1>
       </div>
+      <nav class="mt-6">
+        <a (click)="changeSection('dashboard')" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-500 hover:text-white cursor-pointer" [ngClass]="{'bg-blue-500 text-white': activeSection === 'dashboard'}">Dashboard</a>
+        <a (click)="changeSection('profile')" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-500 hover:text-white cursor-pointer" [ngClass]="{'bg-blue-500 text-white': activeSection === 'profile'}">Profile</a>
+        <a (click)="changeSection('settings')" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-500 hover:text-white cursor-pointer" [ngClass]="{'bg-blue-500 text-white': activeSection === 'settings'}">Settings</a>
+      </nav>
+    </div>
 
-      <!-- Profile Section -->
-      <div *ngIf="activeSection === 'profile'" class="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-lg shadow-lg">
-        <h2 class="text-3xl font-semibold mb-6 text-indigo-800">Your Organization Profile</h2>
+    <!-- Main content -->
+    <div class="flex-1 p-10 overflow-y-auto">
+      <div class="max-w-3xl mx-auto">
+        <!-- Profile Section -->
+        <div *ngIf="activeSection === 'profile'" class="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-lg shadow-lg">
+          <h2 class="text-3xl font-semibold mb-6 text-indigo-800">Your Organization Profile</h2>
 
-        <!-- Verification prompt or Profile form -->
-        <div *ngIf="!isProfileComplete">
-          <div *ngIf="!showProfileForm" class="bg-white border-l-4 border-indigo-500 text-indigo-700 p-6 mb-8 rounded-r-lg shadow-md" role="alert">
-            <p class="font-bold text-lg mb-2">Complete Your Profile</p>
-            <p class="mb-4">To enhance your organization's presence, please complete your profile with all required information.</p>
-            <button (click)="showProfileForm = true" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
-              Complete Profile
-            </button>
-          </div>
-
-          <div *ngIf="showProfileForm" class="bg-white p-8 rounded-lg shadow-md">
-            <div *ngIf="missingAttributes.length > 0" class="bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-4 mb-6 rounded-r-lg" role="alert">
-              <p class="font-bold">Please complete your profile</p>
-              <p>The following information is missing: {{ missingAttributes.join(', ') }}</p>
-            </div>
-            <form [formGroup]="profileForm" (ngSubmit)="updateProfile()" class="space-y-6">
+          <!-- Verification Form -->
+          <div *ngIf="!isVerified" class="bg-white p-8 rounded-lg shadow-md">
+            <h3 class="text-2xl font-semibold mb-4 text-indigo-700">Organization Verification</h3>
+            <form [formGroup]="verificationForm" (ngSubmit)="submitVerification()" class="space-y-6">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div *ngFor="let field of profileForm.controls | keyvalue" class="flex flex-col">
-                  <label [for]="field.key" class="block text-sm font-medium text-gray-700 mb-1">{{ formatFieldName(field.key) }}</label>
+                <div class="flex flex-col">
+                  <label for="typeOfInstitution" class="block text-sm font-medium text-gray-700 mb-1">Type of Institution</label>
+                  <select formControlName="typeOfInstitution" id="typeOfInstitution" class="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out">
+                    <option value="">Select a type</option>
+                    <option *ngFor="let type of organizationTypes" [value]="type">
+                      {{organizationTypesDisplay[type]}}
+                    </option>
+                  </select>
+                  <p *ngIf="verificationForm.get('typeOfInstitution')?.touched && verificationForm.get('typeOfInstitution')?.errors?.['required']" class="mt-1 text-sm text-red-600">
+                    Type of institution is required
+                  </p>
+                  <p *ngIf="verificationForm.get('typeOfInstitution')?.errors?.['serverError']" class="mt-1 text-sm text-red-600">
+                    {{ verificationForm.get('typeOfInstitution')?.errors?.['serverError'] }}
+                  </p>
+                </div>
+                <div *ngFor="let field of ['organizationName', 'description', 'facilityCity', 'facilityAddress', 'phoneNumber', 'schedule', 'website', 'facilityEmailAddress']" class="flex flex-col">
+                  <label [for]="field" class="block text-sm font-medium text-gray-700 mb-1">{{ formatFieldName(field) }}</label>
                   <input 
-                    [id]="field.key" 
-                    [formControlName]="field.key" 
+                    [id]="field" 
+                    [formControlName]="field" 
+                    [type]="field === 'facilityEmailAddress' ? 'email' : 'text'"
                     class="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out"
-                    [ngClass]="{'bg-red-50 border-red-300 focus:border-red-500 focus:ring-red-500': profileForm.get(field.key)?.invalid && profileForm.get(field.key)?.touched}"
+                    [ngClass]="{'bg-red-50 border-red-300 focus:border-red-500 focus:ring-red-500': verificationForm.get(field)?.invalid && verificationForm.get(field)?.touched}"
                   >
-                  <p *ngIf="profileForm.get(field.key)?.invalid && profileForm.get(field.key)?.touched" class="mt-1 text-sm text-red-600">This field is required</p>
+                  <p *ngIf="verificationForm.get(field)?.touched && verificationForm.get(field)?.errors?.['required']" class="mt-1 text-sm text-red-600">
+                    {{ formatFieldName(field) }} is required
+                  </p>
+                  <p *ngIf="verificationForm.get(field)?.touched && verificationForm.get(field)?.errors?.['minlength']" class="mt-1 text-sm text-red-600">
+                    Description must exceed 70 characters
+                  </p>
+                  <p *ngIf="verificationForm.get(field)?.touched && verificationForm.get(field)?.errors?.['maxlength']" class="mt-1 text-sm text-red-600">
+                    {{ formatFieldName(field) }} must not exceed 100 characters
+                  </p>
+                  <p *ngIf="verificationForm.get(field)?.touched && verificationForm.get(field)?.errors?.['email']" class="mt-1 text-sm text-red-600">
+                    Invalid email format
+                  </p>
+                  <p *ngIf="verificationForm.get(field)?.errors?.['serverError']" class="mt-1 text-sm text-red-600">
+                    {{ verificationForm.get(field)?.errors?.['serverError'] }}
+                  </p>
                 </div>
               </div>
               <div class="flex justify-end mt-8">
-                <button type="submit" [disabled]="!profileForm.valid" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed">
-                  Update Profile
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                  Submit for Verification
                 </button>
               </div>
             </form>
+            <div *ngIf="verificationError.general" class="mt-4 text-red-600 text-center p-2 bg-red-100 rounded">
+              {{ verificationError.general }}
+            </div>
+            <div *ngIf="verificationSuccess" class="mt-4 text-green-600 text-center p-2 bg-green-100 rounded">
+              {{ verificationSuccess }}
+            </div>
+          </div>
+
+          <!-- Verified Profile Display -->
+          <div *ngIf="isVerified && organizationProfile" class="bg-white p-8 rounded-lg shadow-md">
+            <h3 class="text-2xl font-semibold mb-4 text-indigo-700">Verified Organization Profile</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div *ngFor="let field of ['organizationName', 'typeOfInstitution', 'description', 'facilityCity', 'facilityAddress', 'phoneNumber', 'schedule', 'website', 'facilityEmailAddress']" class="flex flex-col">
+                <span class="font-semibold text-gray-700">{{ formatFieldName(field) }}:</span>
+                <span class="text-gray-600">{{ organizationProfile[field] }}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
