@@ -5,6 +5,7 @@ import { tap, catchError } from 'rxjs/operators';
 import { isPlatformBrowser } from '@angular/common';
 import { jwtDecode } from 'jwt-decode';
 import { HttpHeaders } from '@angular/common/http';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -70,7 +71,7 @@ export class AuthService {
           const user = {
             role: decodedToken.authorities && decodedToken.authorities.length > 0 ? decodedToken.authorities[0] : 'UNKNOWN',
             fullName: decodedToken.fullName || 'User',
-            email: decodedToken.sub || ''
+            email: decodedToken.sub || '',
           };
           localStorage.setItem('userRole', user.role);
           localStorage.setItem('currentUser', JSON.stringify(user));
@@ -218,5 +219,17 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return this.isAuthenticatedSubject.value;
+  }
+
+  private getHeaders(): HttpHeaders {
+    const token = this.getToken();
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  }
+
+  getUserProfile(): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/profile`, { headers: this.getHeaders() })
+        .pipe(catchError(this.handleError));
   }
 }

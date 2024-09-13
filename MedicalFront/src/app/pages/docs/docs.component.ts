@@ -22,7 +22,8 @@ export class DocsComponent implements OnInit {
   currentPage = 1;
   pageSize = 6;
   totalPages = 1;
-
+  profileImageUrl: string = '';
+  
   constructor(private doctorService: DoctorService) {}
 
   ngOnInit() {
@@ -32,7 +33,13 @@ export class DocsComponent implements OnInit {
   fetchDoctors() {
     this.doctorService.getAllDoctors().subscribe({
       next: (doctors) => {
-        this.doctors = doctors;
+        console.log(doctors); // Add this line
+        this.doctors = doctors.map(doctor => {
+          if (doctor['profileImage']) {
+            doctor['profileImageUrl'] = 'data:image/jpeg;base64,' + doctor['profileImage'];
+          }
+          return doctor;
+        });
         this.filterDoctors();
       },
       error: (error) => {

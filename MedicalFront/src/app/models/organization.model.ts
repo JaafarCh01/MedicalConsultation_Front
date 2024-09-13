@@ -1,4 +1,5 @@
 import { OrganizationTypes } from "./organization-types";
+import { User } from "./user.model";
 
 export interface Organization {
   organizationName: string;
@@ -11,5 +12,6 @@ export interface Organization {
   website: string;
   facilityEmailAddress: string;
   verified: boolean;
+  user : User;
   [key: string]: any;
 }

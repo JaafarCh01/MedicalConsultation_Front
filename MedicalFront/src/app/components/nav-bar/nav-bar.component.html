@@ -1,3 +1,10 @@
+<!-- Verification Message -->
+<div *ngIf="!isLoading && !user?.verified && isLoggedIn" class="fixed-verification-message">
+  Your account is not verified. Please
+  <a (click)="redirectToDashboard()" class="text-white underline cursor-pointer">
+    Verify your account</a> to start working.
+</div>
+
 <div class="bg-white fixed-nav shadow-md">
   <header class="relative">
     <nav class="container mx-auto flex items-center justify-between py-2 px-6" aria-label="Global">
@@ -20,7 +27,7 @@
           <div id="dropdownContainer" class="dropdown-container relative">
             <button id="dropdownAvatarNameButton" (click)="toggleDropdown()" class="flex items-center text-sm pe-1 font-medium text-gray-900 rounded-full hover:text-blue-600 dark:hover:text-blue-500 md:me-0 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-white" type="button">
               <span class="sr-only">Open user menu</span>
-              <img class="w-8 h-8 me-2 rounded-full" src="https://as1.ftcdn.net/v2/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg" alt="user photo">
+              <img class="w-8 h-8 me-2 rounded-full" [src]="profileImageUrl" alt="user photo">
               {{ user?.fullName || 'User' }}
               <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
@@ -39,10 +46,10 @@
                   <a [routerLink]="getDashboardLink()" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+                  <a href="/" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
+                  <a href="/" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
                 </li>
               </ul>
               <div class="py-2">

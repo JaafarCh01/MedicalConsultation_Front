@@ -1,11 +1,12 @@
 import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { MedicalCategories } from '../../models/medical-categories';
 import { MedicalCategoriesDisplay } from '../../models/medical-categories-display';
 
 @Component({
   selector: 'app-docard',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './docard.component.html',
   styleUrl: './docard.component.css'
 })

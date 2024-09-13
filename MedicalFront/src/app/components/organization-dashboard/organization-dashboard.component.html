@@ -1,5 +1,5 @@
 <div class="flex flex-col min-h-screen bg-gray-100">
-  <div class="flex flex-grow mt-16">
+  <div class="flex flex-grow">
     <!-- Sidebar -->
     <div class="w-64 bg-white shadow-md">
       <div class="p-6">
@@ -13,7 +13,7 @@
     </div>
 
     <!-- Main content -->
-    <div class="flex-1 p-10 overflow-y-auto">
+    <div class="flex-1 ml-64 p-10 overflow-y-auto">
       <div class="max-w-3xl mx-auto">
         <!-- Profile Section -->
         <div *ngIf="activeSection === 'profile'" class="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-lg shadow-lg">
@@ -90,6 +90,21 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Settings Section -->
+    <div *ngIf="activeSection === 'settings'" class="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-lg shadow-lg">
+      <h2 class="text-3xl font-semibold mb-6 text-indigo-800">Settings</h2>
+      <div class="settings-section">
+        <h3 class="text-2xl font-semibold mb-4">Profile Image</h3>
+        <div class="flex items-center">
+          <img *ngIf="organizationProfile?.['profileImage']" [src]="profileImageUrl" alt="Profile Image" class="w-32 h-32 rounded-full mr-4">
+          <input type="file" (change)="onFileChange($event)" accept="image/*" class="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out">
+        </div>
+        <button (click)="uploadImage()" class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed">
+          Upload Image
+        </button>
       </div>
     </div>
   </div>

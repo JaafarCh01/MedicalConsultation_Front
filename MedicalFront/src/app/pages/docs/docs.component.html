@@ -8,10 +8,10 @@
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     <app-docard
       *ngFor="let doctor of displayedDoctors"
-      [image]="doctor.profilePicture || ''"
+      [image]="doctor['profileImageUrl']"
       [name]="doctor.firstName + ' ' + doctor.lastName"
-      [price]="(doctor.consultationFee | currency) ?? ''"
       [specialty]="doctor.speciality"
+      [price]="(doctor.consultationFee | currency) ?? ''"
     ></app-docard>
   </div>
   <app-pagination

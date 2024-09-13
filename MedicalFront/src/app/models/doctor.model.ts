@@ -17,7 +17,7 @@ export interface Doctor extends User {
   achievementsAndAwards: string;
   scientificWorks: string;
   verified: boolean;
-  profilePicture?: string;
   consultationFee: number;
+  user : User;
   [key: string]: any; // Add this line to allow string indexing
 }

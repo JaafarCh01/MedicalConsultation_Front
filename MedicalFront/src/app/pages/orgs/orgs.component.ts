@@ -29,6 +29,7 @@ export class OrgsComponent implements OnInit {
       value: value
     }))
   ];
+  profileImageUrl: string = '';
 
   constructor(private organizationService: OrganizationService) {}
 
@@ -39,7 +40,12 @@ export class OrgsComponent implements OnInit {
   fetchOrganizations() {
     this.organizationService.getAllOrganizations().subscribe({
       next: (organizations) => {
-        this.organizations = organizations;
+        this.organizations = organizations.map(org => {
+          if (org['profileImage']) {
+            org['profileImageUrl'] = 'data:image/jpeg;base64,' + org['profileImage'];
+          }
+          return org;
+        });
         this.filterOrganizations();
       },
       error: (error) => {
@@ -89,4 +95,3 @@ export class OrgsComponent implements OnInit {
     this.updatePagedOrganizations();
   }
 }
-

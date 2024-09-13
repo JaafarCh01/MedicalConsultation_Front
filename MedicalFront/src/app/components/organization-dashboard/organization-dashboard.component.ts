@@ -25,6 +25,8 @@ export class OrganizationDashboardComponent implements OnInit {
   organizationTypesDisplay = OrganizationTypesDisplay;
   verificationError: any = {};
   verificationSuccess: string | null = null;
+  profileImageFile: File | null = null;
+  profileImageUrl: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -59,6 +61,9 @@ export class OrganizationDashboardComponent implements OnInit {
         this.isVerified = organization.verified;
         if (this.isVerified) {
           this.verificationForm.patchValue(organization);
+        }
+        if (organization.user.profileImage) { // Access profileImage from user
+          this.profileImageUrl = 'data:image/jpeg;base64,' + organization.user.profileImage;
         }
       },
       error: (error: any) => {
@@ -152,5 +157,33 @@ export class OrganizationDashboardComponent implements OnInit {
   formatFieldName(fieldName: string): string {
     const words = fieldName.split(/(?=[A-Z])/).map(word => word.toLowerCase());
     return words.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  }
+
+  onFileChange(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.profileImageFile = file;
+    }
+  }
+
+  uploadImage(): void {
+    if (this.profileImageFile) {
+      const formData = new FormData();
+      formData.append('profileImage', this.profileImageFile);
+
+      this.organizationService.uploadProfileImage(formData).subscribe({
+        next: (organization: Organization) => {
+          this.organizationProfile = organization;
+          if (organization['profileImage']) {
+            this.profileImageUrl = 'data:image/jpeg;base64,' + organization['profileImage'];
+          }
+          alert('Profile image uploaded successfully.');
+        },
+        error: (error: any) => {
+          console.error('Error uploading profile image:', error);
+          alert('Failed to upload profile image.');
+        }
+      });
+    }
   }
 }

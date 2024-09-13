@@ -50,3 +50,19 @@ nav {
   margin-top: 0; /* Ensure no margin is pushing items down */
 }
 
+.fixed-verification-message {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1001;
+  background-color: #dc3545;
+  color: white;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  transition: opacity 0.3s ease-in-out;
+  border-radius: 0.25rem;
+  width: auto; /* Adjust width as needed */
+  max-width: 90%; /* Ensure it doesn't overflow on smaller screens */
+}
+

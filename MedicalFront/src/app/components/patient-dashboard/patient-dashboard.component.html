@@ -1,4 +1,4 @@
-<div class="flex h-screen bg-gray-100 mt-16">
+<div class="flex flex-col min-h-screen bg-gray-100">
   <!-- Sidebar -->
   <div class="w-64 bg-white shadow-md">
     <div class="p-6">
@@ -8,17 +8,23 @@
       <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-500 hover:text-white">Dashboard</a>
       <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-500 hover:text-white">Appointments</a>
       <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-500 hover:text-white">Medical History</a>
-      <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-500 hover:text-white">Profile</a>
-      <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-500 hover:text-white">Settings</a>
+      <a (click)="changeSection('profile')" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-500 hover:text-white">Profile</a>
+      <a (click)="changeSection('settings')" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-500 hover:text-white">Settings</a>
     </nav>
   </div>
 
-  <!-- Main content -->
-  <div class="flex-1 p-10 mt-20">
-    <div class="max-w-3xl mx-auto">
-      <h2 class="text-3xl font-semibold mb-6 text-gray-700">Welcome to your patient dashboard</h2>
-      <p>Here you can view your appointments and medical history.</p>
-      <!-- Add more dashboard content here -->
+  <!-- Settings Section -->
+  <div *ngIf="activeSection === 'settings'" class="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-lg shadow-lg">
+    <h2 class="text-3xl font-semibold mb-6 text-indigo-800">Settings</h2>
+    <div class="settings-section">
+      <h3 class="text-2xl font-semibold mb-4">Profile Image</h3>
+      <div class="flex items-center">
+        <img *ngIf="patientProfile?.user?.profileImage" [src]="profileImageUrl" alt="Profile Image" class="w-32 h-32 rounded-full mr-4">
+        <input type="file" (change)="onFileChange($event)" accept="image/*" class="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out">
+      </div>
+      <button (click)="uploadImage()" class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed">
+        Upload Image
+      </button>
     </div>
   </div>
 </div>

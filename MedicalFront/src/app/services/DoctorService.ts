@@ -62,6 +62,14 @@ export class DoctorService {
     );
   }
 
+  uploadProfileImage(formData: FormData): Observable<Doctor> {
+    return this.http.post<Doctor>(`${this.apiUrl}/upload-profile-image`, formData, {
+      headers: {
+        'Authorization': `Bearer ${this.authService.getToken()}` // Include authorization if needed
+      }
+    });
+  }
+
   private handleError = (error: HttpErrorResponse) => {
     console.error('An error occurred:', error);
     return throwError(() => new Error(`${error.status} ${error.statusText}: ${error.message}`));

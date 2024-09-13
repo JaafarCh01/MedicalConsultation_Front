@@ -8,6 +8,7 @@
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     <app-orgcard
       *ngFor="let organization of displayedOrganizations"
+      [image]="organization['profileImageUrl']"
       [name]="organization.organizationName"
       [type]="organization.typeOfInstitution"
       [description]="organization.description"

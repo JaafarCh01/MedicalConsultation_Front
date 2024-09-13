@@ -26,6 +26,8 @@ export class DoctorDashboardComponent implements OnInit {
   medicalCategoriesDisplay = MedicalCategoriesDisplay;
   verificationError: any = {};
   verificationSuccess: string | null = null;
+  profileImageFile: File | null = null;
+  profileImageUrl: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -67,19 +69,42 @@ export class DoctorDashboardComponent implements OnInit {
         if (this.isVerified) {
           this.verificationForm.patchValue(doctor);
         }
+        if (doctor.user.profileImage) { // Access profileImage from user
+          this.profileImageUrl = 'data:image/jpeg;base64,' + doctor.user.profileImage;
+        }
       },
       error: (error: any) => {
-        console.error('Error loading doctor profile:', error);
+        console.error('Error loading organization profile:', error);
       }
     });
   }
 
   onFileChange(event: any) {
     const files = event.target.files;
-    this.verificationForm.patchValue({
-      certificates: files
-    });
-    this.verificationForm.get('certificates')?.updateValueAndValidity();
+    if (files.length > 0) {
+      this.profileImageFile = files[0];
+    }
+  }
+
+  uploadImage() {
+    if (this.profileImageFile) {
+      const formData = new FormData();
+      formData.append('profileImage', this.profileImageFile);
+
+      this.doctorService.uploadProfileImage(formData).subscribe({
+        next: (doctor: Doctor) => {
+          this.doctorProfile = doctor;
+          if (doctor['profileImage']) {
+            this.profileImageUrl = 'data:image/jpeg;base64,' + doctor['profileImage'];
+          }
+          alert('Profile image uploaded successfully.');
+        },
+        error: (error: any) => {
+          console.error('Error uploading profile image:', error);
+          alert('Failed to upload profile image.');
+        }
+      });
+    }
   }
 
   submitVerification() {
