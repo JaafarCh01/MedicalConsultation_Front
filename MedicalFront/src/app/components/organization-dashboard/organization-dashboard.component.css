@@ -16,13 +16,22 @@ nav a:hover {
   color: white;
 }
 
-.fixed {
-  position: fixed;
+.sidebar {
+  position: -webkit-sticky; /* For Safari */
+  position: sticky;
   top: 64px; /* Adjust this value to match your navbar height */
-  left: 0;
-  bottom: 0;
+  height: calc(100vh - 64px); /* Adjust this value to match your navbar height */
+  overflow-y: auto;
 }
 
 .ml-64 {
-  margin-left: 16rem;
+  margin-left: 4rem;
+}
+
+.mt-16 {
+  margin-top: 4rem; /* Adjust this value to match your navbar height */
+}
+
+.mb-16 {
+  margin-bottom: 0rem; /* Adjust this value to provide space for the footer */
 }

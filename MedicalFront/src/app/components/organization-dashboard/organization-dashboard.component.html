@@ -1,7 +1,7 @@
 <div class="flex flex-col min-h-screen bg-gray-100">
   <div class="flex flex-grow">
     <!-- Sidebar -->
-    <div class="w-64 bg-white shadow-md">
+    <div class="w-64 bg-white shadow-md sidebar">
       <div class="p-6">
         <h1 class="text-2xl font-bold text-gray-800">Organization Dashboard</h1>
       </div>
@@ -13,7 +13,7 @@
     </div>
 
     <!-- Main content -->
-    <div class="flex-1 ml-64 p-10 overflow-y-auto">
+    <div class="flex-1 ml-16 p-10 mt-16 mb-16 overflow-y-auto">
       <div class="max-w-3xl mx-auto">
         <!-- Profile Section -->
         <div *ngIf="activeSection === 'profile'" class="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-lg shadow-lg">
