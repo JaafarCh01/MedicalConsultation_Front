@@ -1,81 +1,53 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
+
+interface Article {
+  id: number;
+  title: string;
+  author: string;
+  date: string;
+  summary: string;
+  category: string;
+  imageUrl: string;
+}
 
 @Component({
   selector: 'app-articles',
   standalone: true,
-  imports: [PaginationComponent, CommonModule, RouterModule, DatePipe],
+  imports: [PaginationComponent, CommonModule, RouterModule],
   templateUrl: './articles.component.html',
-  styleUrl: './articles.component.css'
+  styleUrls: ['./articles.component.css']
 })
 export class ArticlesComponent implements OnInit {
-  articles = [
-    { id: 1, title: 'Article 1', author: 'Author 1', date: '2023-01-01', summary: 'Summary of article 1', category: 'Cardiology' },
-    { id: 2, title: 'Article 2', author: 'Author 2', date: '2023-02-01', summary: 'Summary of article 2', category: 'Dermatology' },
-    { id: 3, title: 'Article 3', author: 'Author 3', date: '2023-03-01', summary: 'Summary of article 3', category: 'Neurology' },
-    { id: 4, title: 'Article 4', author: 'Author 4', date: '2023-04-01', summary: 'Summary of article 4', category: 'Pediatrics' },
-    { id: 5, title: 'Article 5', author: 'Author 5', date: '2023-05-01', summary: 'Summary of article 5', category: 'Orthopedics' },
-    { id: 6, title: 'Article 6', author: 'Author 6', date: '2023-06-01', summary: 'Summary of article 6', category: 'Psychiatry' },
-    { id: 7, title: 'Article 7', author: 'Author 7', date: '2023-07-01', summary: 'Summary of article 7', category: 'Oncology' },
-    { id: 8, title: 'Article 8', author: 'Author 8', date: '2023-08-01', summary: 'Summary of article 8', category: 'Radiology' },
-    { id: 9, title: 'Article 9', author: 'Author 9', date: '2023-09-01', summary: 'Summary of article 9', category: 'Gastroenterology' },
-    { id: 10, title: 'Article 10', author: 'Author 10', date: '2023-10-01', summary: 'Summary of article 10', category: 'Endocrinology' },
-    { id: 11, title: 'Article 11', author: 'Author 11', date: '2023-11-01', summary: 'Summary of article 11', category: 'Hematology' },
-    { id: 12, title: 'Article 12', author: 'Author 12', date: '2023-12-01', summary: 'Summary of article 12', category: 'Nephrology' },
+  articles: Article[] = [
+    { id: 1, title: 'Understanding Diabetes', author: 'Dr. John Doe', date: '2023-05-01', summary: 'An in-depth look into managing and understanding diabetes, its symptoms, and treatment options.', category: 'Endocrinology', imageUrl: 'https://as1.ftcdn.net/v2/jpg/02/76/20/56/1000_F_276205639_zXwXmtHSonG36a9pXiF2mYI6pBTIIMc8.jpg' },
+    { id: 2, title: 'Heart Health Tips', author: 'Dr. Jane Smith', date: '2023-05-15', summary: 'Essential tips and advice on maintaining a healthy heart and preventing heart diseases.', category: 'Cardiology', imageUrl: 'https://as1.ftcdn.net/v2/jpg/02/55/91/22/1000_F_255912251_vAQv7KTZbStZSSyL2bC3aZIVD3vWdmCO.jpg' },
+    { id: 3, title: 'Cancer Treatment Advances', author: 'Dr. Michael Johnson', date: '2023-06-01', summary: 'Latest advancements in cancer treatment, research breakthroughs, and patient care.', category: 'Oncology', imageUrl: 'https://as2.ftcdn.net/v2/jpg/08/33/89/25/1000_F_833892556_O62E7v2DDqljJcOsNetUXmJN2NGVr2xg.jpg' },
+    { id: 4, title: 'Mental Health Awareness', author: 'Dr. Emily Brown', date: '2023-06-15', summary: 'Understanding the importance of mental health and strategies for maintaining emotional well-being.', category: 'Psychiatry', imageUrl: 'https://as1.ftcdn.net/v2/jpg/07/57/33/22/1000_F_757332277_dR4dtJWZAu47nSrBauVgJy5FUtRd1sH5.jpg' },
+    { id: 5, title: 'Nutrition and Diet', author: 'Dr. David Wilson', date: '2023-07-01', summary: 'Exploring the role of nutrition in overall health and tips for maintaining a balanced diet.', category: 'Nutrition', imageUrl: 'https://as1.ftcdn.net/v2/jpg/02/77/22/76/1000_F_277227681_tG6Y5NNQo7Jji61nCFya2fxbTunku78d.jpg' },
+    { id: 6, title: 'Pediatric Care Essentials', author: 'Dr. Sarah Lee', date: '2023-07-15', summary: 'Key aspects of pediatric care and child health management for parents and caregivers.', category: 'Pediatrics', imageUrl: 'https://as1.ftcdn.net/v2/jpg/04/08/48/26/1000_F_408482658_k7t25kX0vuzYMNSi7R5U3m6eloxT7tFh.jpg' },
   ];
 
-  filteredArticles: any[] = [];
-  displayedArticles: any[] = [];
+  displayedArticles: Article[] = [];
   currentPage = 1;
-  pageSize = 9;
+  pageSize = 6;
   totalPages = 1;
 
   ngOnInit() {
-    this.filterArticles();
-  }
-
-  onFilter(filter: string) {
-    this.filterArticles(undefined, filter);
-  }
-
-  filterArticles(searchTerm?: string, filter?: string) {
-    let filtered = this.articles;
-
-    if (searchTerm) {
-      filtered = filtered.filter(article => 
-        article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        article.author.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    if (filter && filter !== 'All') {
-      filtered = filtered.filter(article => article.category === filter);
-    }
-
-    this.filteredArticles = filtered;
-    this.totalPages = Math.ceil(this.filteredArticles.length / this.pageSize);
-    this.currentPage = 1;
     this.updatePagedArticles();
   }
 
   updatePagedArticles() {
     const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
-    this.displayedArticles = this.filteredArticles.slice(startIndex, endIndex);
-  
-    // Fill the remaining slots with empty placeholders
-    while (this.displayedArticles.length < this.pageSize) {
-      this.displayedArticles.push({ id: null, title: '', author: '', date: '', summary: '', category: '' });
-    }
+    this.displayedArticles = this.articles.slice(startIndex, endIndex);
+    this.totalPages = Math.ceil(this.articles.length / this.pageSize);
   }
 
   onPageChange(page: number) {
     this.currentPage = page;
     this.updatePagedArticles();
-    setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 100);
   }
 }
