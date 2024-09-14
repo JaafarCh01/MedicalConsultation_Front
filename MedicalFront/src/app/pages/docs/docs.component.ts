@@ -7,11 +7,18 @@ import { DoctorService } from '../../services/DoctorService';
 import { Doctor } from '../../models/doctor.model';
 import { MedicalCategories } from '../../models/medical-categories';
 import { MedicalCategoriesDisplay } from '../../models/medical-categories-display';
+import { PatientService } from '../../services/PatientService';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule } from '@angular/material/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { BookAppointmentDialogComponent } from '../../components/book-appointment-dialog/book-appointment-dialog.component';
 
 @Component({
   selector: 'app-docs',
   standalone: true,
-  imports: [DocardComponent, SearchComponent, PaginationComponent, CommonModule],
+  imports: [DocardComponent, SearchComponent, PaginationComponent, CommonModule, MatDialogModule, MatDatepickerModule, MatInputModule, MatNativeDateModule, ReactiveFormsModule, BookAppointmentDialogComponent],
   templateUrl: './docs.component.html',
   styleUrl: './docs.component.css'
 })
@@ -24,7 +31,7 @@ export class DocsComponent implements OnInit {
   totalPages = 1;
   profileImageUrl: string = '';
   
-  constructor(private doctorService: DoctorService) {}
+  constructor(private doctorService: DoctorService, private patientService: PatientService, private dialog: MatDialog) {}
 
   ngOnInit() {
     this.fetchDoctors();
@@ -101,5 +108,27 @@ export class DocsComponent implements OnInit {
       value: value
     }))
   ];
+
+  bookAppointment(doctorEmail: string) {
+    const dialogRef = this.dialog.open(BookAppointmentDialogComponent, {
+      width: '300px',
+      data: { doctorEmail: doctorEmail }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.patientService.bookAppointment(doctorEmail, result).subscribe(
+          (response) => {
+            console.log('Appointment booked successfully', response);
+            alert('Appointment booked successfully');
+          },
+          (error) => {
+            console.error('Error booking appointment', error);
+            alert('Failed to book appointment');
+          }
+        );
+      }
+    });
+  }
 }
 

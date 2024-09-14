@@ -13,11 +13,12 @@
     </div>
 
     <!-- Main content -->
-    <div class="flex-1 ml-64 p-10 mt-16 mb-16 overflow-y-auto">
+    <div class="flex-1 p-10 mt-16 mb-16 overflow-y-auto">
       <div class="max-w-3xl mx-auto">
         <!-- Profile Section -->
         <div *ngIf="activeSection === 'profile'" class="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-lg shadow-lg">
           <h2 class="text-3xl font-semibold mb-6 text-indigo-800">Your Professional Profile</h2>
+
           <!-- Verification Form -->
           <div *ngIf="!isVerified" class="bg-white p-8 rounded-lg shadow-md">
             <h3 class="text-2xl font-semibold mb-4 text-indigo-700">Doctor Verification</h3>
@@ -107,6 +108,25 @@
             </div>
           </div>
         </div>
+
+        <!-- Appointments Section -->
+        <div *ngIf="activeSection === 'appointments'" class="bg-white p-8 rounded-lg shadow-md">
+          <h2 class="text-2xl font-semibold mb-4">Your Appointments</h2>
+          <div *ngIf="appointments && appointments.length === 0" class="text-gray-600">
+            You have no scheduled appointments.
+          </div>
+          <div *ngIf="appointments && appointments.length > 0">
+            <div *ngFor="let appointment of appointments" class="mb-4 p-4 border rounded-md">
+              <p><strong>Patient:</strong> {{ appointment.patient?.firstName }} {{ appointment.patient?.lastName }}</p>
+              <p><strong>Date:</strong> {{ appointment.appointmentDateTime | date:'medium' }}</p>
+              <p><strong>Status:</strong> {{ appointment.status }}</p>
+              <button (click)="cancelAppointment(appointment.id)" class="mt-2 bg-red-500 text-white py-1 px-2 rounded">Cancel</button>
+            </div>
+          </div>
+          <div *ngIf="!appointments">Loading appointments...</div>
+          <div *ngIf="appointments === undefined">Error loading appointments. Please try again later.</div>
+        </div>
+
         <!-- Settings Section -->
         <div *ngIf="activeSection === 'settings'" class="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-lg shadow-lg">
           <h2 class="text-3xl font-semibold mb-6 text-indigo-800">Settings</h2>

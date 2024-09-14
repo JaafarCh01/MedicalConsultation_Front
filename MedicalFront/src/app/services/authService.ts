@@ -232,4 +232,22 @@ export class AuthService {
     return this.http.get<User>(`${this.apiUrl}/profile`, { headers: this.getHeaders() })
         .pipe(catchError(this.handleError));
   }
+
+  getCurrentUserEmail(): string | null {
+    const token = this.getToken();
+    if (token) {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.sub; // Assuming the email is stored in the 'sub' claim
+    }
+    return null;
+  }
+
+  getEmail(): string {
+    const token = this.getToken();
+    if (token) {
+      const decodedToken = jwtDecode(token) as any; // You might need to install jwt-decode package
+      return decodedToken.sub; // Assuming the email is stored in the 'sub' claim of the JWT
+    }
+    return '';
+  }
 }

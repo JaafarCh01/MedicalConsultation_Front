@@ -70,8 +70,42 @@ export class DoctorService {
     });
   }
 
+  bookAppointment(doctorEmail: string, appointmentDateTime: string): Observable<any> {
+    const body = { doctorEmail, appointmentDateTime };
+    console.log('Sending appointment request:', body);
+    return this.http.post(`http://localhost:8088/api/v1/appointments/book`, body, { headers: this.getHeaders(), observe: 'response' })
+      .pipe(
+        tap(response => console.log('Appointment response:', response)),
+        map(response => response.body),
+        catchError(this.handleError)
+      );
+  }
+
+  getDoctorAppointments(): Observable<any[]> {
+    return this.http.get<any[]>(`http://localhost:8088/api/v1/appointments/doctor`, { headers: this.getHeaders() })
+      .pipe(
+        tap(appointments => console.log('Fetched appointments:', appointments)),
+        catchError(this.handleError)
+      );
+  }
+
+  cancelAppointment(appointmentId: number): Observable<any> {
+    return this.http.post(`http://localhost:8088/api/v1/appointments/cancel/${appointmentId}`, {}, { headers: this.getHeaders() })
+      .pipe(
+        tap(response => console.log('Appointment cancelled:', response)),
+        catchError(this.handleError)
+      );
+  }
+
   private handleError = (error: HttpErrorResponse) => {
     console.error('An error occurred:', error);
-    return throwError(() => new Error(`${error.status} ${error.statusText}: ${error.message}`));
+    console.error('Error details:', error.error);
+    let errorMessage = `${error.status} ${error.statusText}: ${error.message}`;
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Client-side error: ${error.error.message}`;
+    } else if (error.error && error.error.message) {
+      errorMessage = `Server-side error: ${error.error.message}`;
+    }
+    return throwError(() => new Error(errorMessage));
   }
 }

@@ -3,16 +3,30 @@ import { isPlatformBrowser } from '@angular/common';
 import { DoctorService } from '../../services/DoctorService';
 import { AuthService } from '../../services/authService';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Doctor } from '../../models/doctor.model';
 import { MedicalCategories } from '../../models/medical-categories';
 import { MedicalCategoriesDisplay } from '../../models/medical-categories-display';
 import { Router } from '@angular/router';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule } from '@angular/material/core';
+import { BookAppointmentDialogComponent } from '../../components/book-appointment-dialog/book-appointment-dialog.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-doctor-dashboard',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MatNativeDateModule,
+    BookAppointmentDialogComponent
+  ],
   templateUrl: './doctor-dashboard.component.html',
   styleUrl: './doctor-dashboard.component.css'
 })
@@ -58,6 +72,7 @@ export class DoctorDashboardComponent implements OnInit {
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       this.loadDoctorProfile();
+      this.loadAppointments();
     }
   }
 
@@ -72,9 +87,25 @@ export class DoctorDashboardComponent implements OnInit {
         if (doctor.user.profileImage) { // Access profileImage from user
           this.profileImageUrl = 'data:image/jpeg;base64,' + doctor.user.profileImage;
         }
+        this.loadAppointments();
       },
       error: (error: any) => {
         console.error('Error loading organization profile:', error);
+      }
+    });
+  }
+
+  loadAppointments() {
+    console.log('Loading appointments...');
+    this.doctorService.getDoctorAppointments().subscribe({
+      next: (appointments) => {
+        console.log('Received appointments:', appointments);
+        this.appointments = appointments;
+        this.activeSection = 'appointments';
+      },
+      error: (error) => {
+        console.error('Error loading appointments', error);
+        this.activeSection = 'appointments';
       }
     });
   }
@@ -203,10 +234,15 @@ export class DoctorDashboardComponent implements OnInit {
   }
 
   changeSection(section: string) {
+    console.log('Changing section to:', section);
     this.activeSection = section;
     if (section === 'profile') {
       this.loadDoctorProfile();
+    } else if (section === 'appointments') {
+      this.loadAppointments();
     }
+    console.log('Active section after change:', this.activeSection);
+    console.log('Appointments:', this.appointments);
   }
   
   formatFieldName(fieldName: string): string {
@@ -227,5 +263,17 @@ export class DoctorDashboardComponent implements OnInit {
       }
     }
     return null;
+  }
+
+  cancelAppointment(appointmentId: number) {
+    this.doctorService.cancelAppointment(appointmentId).subscribe({
+      next: (response) => {
+        console.log('Appointment cancelled successfully', response);
+        this.loadAppointments(); // Refresh the appointments list
+      },
+      error: (error) => {
+        console.error('Error cancelling appointment', error);
+      }
+    });
   }
 }

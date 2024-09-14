@@ -19,6 +19,7 @@ export class PatientDashboardComponent implements OnInit {
   activeSection: string = 'dashboard';
   profileImageFile: File | null = null;
   profileImageUrl: string | null = null;
+  appointments: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -44,6 +45,20 @@ export class PatientDashboardComponent implements OnInit {
       },
       error: (error: any) => {
         console.error('Error loading patient profile:', error);
+      }
+    });
+  }
+
+  loadAppointments() {
+    this.patientService.getPatientAppointments().subscribe({
+      next: (appointments) => {
+        console.log('Received appointments:', appointments);
+        this.appointments = appointments;
+        this.activeSection = 'appointments'; // Set the active section
+      },
+      error: (error) => {
+        console.error('Error loading appointments', error);
+        this.activeSection = 'appointments'; // Set the active section even if there's an error
       }
     });
   }
@@ -77,9 +92,46 @@ export class PatientDashboardComponent implements OnInit {
   }
 
   changeSection(section: string) {
+    console.log('Changing section to:', section);
     this.activeSection = section;
     if (section === 'profile') {
       this.loadPatientProfile();
+    } else if (section === 'appointments') {
+      this.loadAppointments();
     }
+    console.log('Active section after change:', this.activeSection);
+    console.log('Appointments:', this.appointments);
+  }
+
+  bookAppointment(doctorEmail: string) {
+    const appointmentDateTime = new Date().toISOString().slice(0, 19); // Format: YYYY-MM-DDTHH:mm:ss
+    this.patientService.bookAppointment(doctorEmail, appointmentDateTime).subscribe(
+      (response) => {
+        console.log('Appointment booked successfully', response);
+        alert('Appointment booked successfully');
+        this.loadAppointments(); // Refresh the appointments list
+      },
+      (error) => {
+        console.error('Error booking appointment', error);
+        let errorMessage = 'An error occurred while booking the appointment.';
+        if (error.error && error.error.message) {
+          errorMessage = error.error.message;
+        }
+        alert(errorMessage);
+      }
+    );
+  }
+
+  cancelAppointment(appointmentId: number) {
+    this.patientService.cancelAppointment(appointmentId).subscribe({
+      next: (response) => {
+        console.log('Appointment cancelled successfully', response);
+        this.loadAppointments(); // Refresh the appointments list
+      },
+      error: (error) => {
+        console.error('Error cancelling appointment', error);
+        alert('Failed to cancel appointment');
+      }
+    });
   }
 }
