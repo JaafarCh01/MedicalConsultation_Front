@@ -250,4 +250,13 @@ export class AuthService {
     }
     return '';
   }
+
+  changePassword(data: { oldPassword: string; newPassword: string; confirmPassword: string }): Observable<any> {
+    const token = localStorage.getItem(this.tokenKey); // Adjust how you retrieve the token
+    return this.http.post(`${this.apiUrl}/change-password`, data, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+  }
 }

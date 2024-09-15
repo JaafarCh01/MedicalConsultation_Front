@@ -34,6 +34,7 @@ export class DoctorDashboardComponent implements OnInit {
   appointments: any[] = [];
   doctorProfile: Doctor | null = null;
   verificationForm: FormGroup;
+  changePasswordForm: FormGroup;
   activeSection: string = 'appointments';
   isVerified: boolean = false;
   medicalCategories = Object.values(MedicalCategories);
@@ -42,6 +43,7 @@ export class DoctorDashboardComponent implements OnInit {
   verificationSuccess: string | null = null;
   profileImageFile: File | null = null;
   profileImageUrl: string | null = null;
+  changePasswordError: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -66,6 +68,12 @@ export class DoctorDashboardComponent implements OnInit {
       achievementsAndAwards: ['', [Validators.maxLength(500)]],
       scientificWorks: ['', [Validators.maxLength(500)]],
       certificates: [null, [this.validateCertificates]]
+    });
+
+    this.changePasswordForm = this.fb.group({
+      oldPassword: ['', Validators.required],
+      newPassword: ['', [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ['', Validators.required],
     });
   }
 
@@ -226,13 +234,6 @@ export class DoctorDashboardComponent implements OnInit {
     });
   }
 
-  private validateAllFormFields() {
-    Object.keys(this.verificationForm.controls).forEach(field => {
-      const control = this.verificationForm.get(field);
-      control?.markAsTouched({ onlySelf: true });
-    });
-  }
-
   changeSection(section: string) {
     console.log('Changing section to:', section);
     this.activeSection = section;
@@ -274,6 +275,43 @@ export class DoctorDashboardComponent implements OnInit {
       error: (error) => {
         console.error('Error cancelling appointment', error);
       }
+    });
+  }
+
+  onSubmit(): void {
+    if (this.changePasswordForm.valid) {
+      const { oldPassword, newPassword, confirmPassword } = this.changePasswordForm.value;
+      if (newPassword !== confirmPassword) {
+        this.changePasswordError = "New passwords do not match!";
+        return;
+      }
+      console.log("Attempting to change password for user:", oldPassword);
+      this.authService.changePassword({ oldPassword, newPassword, confirmPassword }).subscribe(
+        () => {
+          // Directly show success message without checking for response
+          this.changePasswordError = null; // Clear any previous errors
+          alert("Password Changed Successfully!"); // Display success message
+          this.changePasswordForm.reset(); // Reset the form after successful change
+        },
+        error => {
+          console.error("Error response from server:", error);
+          // Check if the error response has a specific error message
+          if (error.error && error.error.error) {
+            this.changePasswordError = error.error.error; // Extract the specific error message
+          } else {
+            this.changePasswordError = "An unexpected error occurred. Please try again."; // Fallback error message
+          }
+        }
+      );
+    } else {
+      this.validateAllFormFields();
+    }
+  }
+
+  private validateAllFormFields() {
+    Object.keys(this.changePasswordForm.controls).forEach(field => {
+      const control = this.changePasswordForm.get(field);
+      control?.markAsTouched({ onlySelf: true });
     });
   }
 }

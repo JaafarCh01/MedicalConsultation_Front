@@ -5,6 +5,8 @@ import { DoctorService } from '../../services/DoctorService';
 import { MatDialog } from '@angular/material/dialog';
 import { BookAppointmentDialogComponent } from '../book-appointment-dialog/book-appointment-dialog.component';
 import { PatientService } from '../../services/PatientService';
+import { MedicalCategoriesDisplay } from '../../models/medical-categories-display';
+import { MedicalCategories } from '../../models/medical-categories';
 
 @Component({
   selector: 'app-docard',
@@ -17,7 +19,7 @@ export class DocardComponent {
   @Input() doctor!: Doctor;
   @Input() image: string = '';
   @Input() name: string = '';
-  @Input() specialty: string = '';
+  @Input() specialty: MedicalCategories = MedicalCategories.INTERNAL_MEDICINE; // Change type to MedicalCategories
   @Input() price: string = '';
 
   constructor(
@@ -25,6 +27,10 @@ export class DocardComponent {
     private patientService: PatientService,
     private dialog: MatDialog
   ) {}
+
+  get specialtyDisplay(): string {
+    return MedicalCategoriesDisplay[this.specialty];
+  }
 
   bookAppointment(doctorEmail: string) {
     const dialogRef = this.dialog.open(BookAppointmentDialogComponent, {

@@ -72,9 +72,13 @@ export class QuestionListComponent implements OnInit {
         console.log('Received questions:', questions);
         this.questions = questions.map(q => ({
           ...q,
-          patient: q.patient || { name: 'Anonymous' },
+          patient: q.patient ? { 
+            firstName: q.patient.firstName || 'Anonymous', 
+            lastName: q.patient.lastName || '' 
+          } : { firstName: 'Anonymous', lastName: '' },
           showAnswer: false
         }));
+        console.log('Questions with patient data:', this.questions);
       },
       error: (error) => {
         console.error('Error loading questions', error);

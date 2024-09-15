@@ -27,6 +27,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
   isDropdownOpen: boolean = false;
   isLoading: boolean = true; // Add a loading state
   profileImageUrl: string = 'https://as1.ftcdn.net/v2/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg';
+  isMoreDropdownOpen: boolean = false;
 
   constructor(public authService: AuthService, private router: Router, private organizationService: OrganizationService) {}
 
@@ -82,6 +83,11 @@ export class NavBarComponent implements OnInit, OnDestroy {
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
+
+  toggleMoreDropdown() {
+    this.isMoreDropdownOpen = !this.isMoreDropdownOpen;
+  }
+
 
   getDashboardLink(): string {
     const role = this.authService.getUserRole();

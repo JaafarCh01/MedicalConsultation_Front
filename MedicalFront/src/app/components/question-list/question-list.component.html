@@ -1,6 +1,4 @@
 <div class="container mx-auto px-4 py-8">
-  <h1 class="text-4xl font-bold mb-8">MediConsul</h1>
-
   <button (click)="toggleAskQuestion()" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300 mb-4">
     {{ showAskQuestion ? 'Hide Ask Question' : 'Show Ask Question' }}
   </button>
@@ -33,7 +31,7 @@
     <div class="flex justify-between items-center">
       <div class="flex-grow">
         <h3 class="text-xl font-semibold mb-2">{{ question.title }}</h3>
-        <p class="text-gray-600 mb-2">Asked by: {{ question.patient?.name || 'Anonymous' }}</p>
+        <p class="text-gray-600 mb-2">Asked by: {{ question.patient.firstName }} {{ question.patient.lastName }}</p>
         <p class="text-gray-700">{{ question.description }}</p>
       </div>
       <div class="ml-4 flex-shrink-0">

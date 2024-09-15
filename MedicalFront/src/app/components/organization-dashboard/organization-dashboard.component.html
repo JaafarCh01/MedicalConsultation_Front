@@ -13,12 +13,10 @@
     </div>
 
     <!-- Main content -->
-    <div class="flex-1 ml-16 p-10 mt-16 mb-16 overflow-y-auto">
+    <div class="flex-1 p-10 mt-16 mb-16 overflow-y-auto">
       <div class="max-w-3xl mx-auto">
         <!-- Profile Section -->
         <div *ngIf="activeSection === 'profile'" class="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-lg shadow-lg">
-          <h2 class="text-3xl font-semibold mb-6 text-indigo-800">Your Organization Profile</h2>
-
           <!-- Verification Form -->
           <div *ngIf="!isVerified" class="bg-white p-8 rounded-lg shadow-md">
             <h3 class="text-2xl font-semibold mb-4 text-indigo-700">Organization Verification</h3>
@@ -28,84 +26,54 @@
                   <label for="typeOfInstitution" class="block text-sm font-medium text-gray-700 mb-1">Type of Institution</label>
                   <select formControlName="typeOfInstitution" id="typeOfInstitution" class="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out">
                     <option value="">Select a type</option>
-                    <option *ngFor="let type of organizationTypes" [value]="type">
-                      {{organizationTypesDisplay[type]}}
-                    </option>
+                    <option *ngFor="let type of organizationTypes" [value]="type">{{organizationTypesDisplay[type]}}</option>
                   </select>
-                  <p *ngIf="verificationForm.get('typeOfInstitution')?.touched && verificationForm.get('typeOfInstitution')?.errors?.['required']" class="mt-1 text-sm text-red-600">
-                    Type of institution is required
-                  </p>
-                  <p *ngIf="verificationForm.get('typeOfInstitution')?.errors?.['serverError']" class="mt-1 text-sm text-red-600">
-                    {{ verificationForm.get('typeOfInstitution')?.errors?.['serverError'] }}
-                  </p>
+                  <p *ngIf="verificationForm.get('typeOfInstitution')?.touched && verificationForm.get('typeOfInstitution')?.errors?.['required']" class="mt-1 text-sm text-red-600">Type of institution is required</p>
+                  <p *ngIf="verificationForm.get('typeOfInstitution')?.errors?.['serverError']" class="mt-1 text-sm text-red-600">{{ verificationForm.get('typeOfInstitution')?.errors?.['serverError'] }}</p>
                 </div>
                 <div *ngFor="let field of ['organizationName', 'description', 'facilityCity', 'facilityAddress', 'phoneNumber', 'schedule', 'website', 'facilityEmailAddress']" class="flex flex-col">
                   <label [for]="field" class="block text-sm font-medium text-gray-700 mb-1">{{ formatFieldName(field) }}</label>
-                  <input 
-                    [id]="field" 
-                    [formControlName]="field" 
-                    [type]="field === 'facilityEmailAddress' ? 'email' : 'text'"
-                    class="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out"
-                    [ngClass]="{'bg-red-50 border-red-300 focus:border-red-500 focus:ring-red-500': verificationForm.get(field)?.invalid && verificationForm.get(field)?.touched}"
-                  >
-                  <p *ngIf="verificationForm.get(field)?.touched && verificationForm.get(field)?.errors?.['required']" class="mt-1 text-sm text-red-600">
-                    {{ formatFieldName(field) }} is required
-                  </p>
-                  <p *ngIf="verificationForm.get(field)?.touched && verificationForm.get(field)?.errors?.['minlength']" class="mt-1 text-sm text-red-600">
-                    Description must exceed 70 characters
-                  </p>
-                  <p *ngIf="verificationForm.get(field)?.touched && verificationForm.get(field)?.errors?.['maxlength']" class="mt-1 text-sm text-red-600">
-                    {{ formatFieldName(field) }} must not exceed 100 characters
-                  </p>
-                  <p *ngIf="verificationForm.get(field)?.touched && verificationForm.get(field)?.errors?.['email']" class="mt-1 text-sm text-red-600">
-                    Invalid email format
-                  </p>
-                  <p *ngIf="verificationForm.get(field)?.errors?.['serverError']" class="mt-1 text-sm text-red-600">
-                    {{ verificationForm.get(field)?.errors?.['serverError'] }}
-                  </p>
+                  <input [id]="field" [formControlName]="field" [type]="field === 'facilityEmailAddress' ? 'email' : 'text'" class="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" [ngClass]="{'bg-red-50 border-red-300 focus:border-red-500 focus:ring-red-500': verificationForm.get(field)?.invalid && verificationForm.get(field)?.touched}">
+                  <p *ngIf="verificationForm.get(field)?.touched && verificationForm.get(field)?.errors?.['required']" class="mt-1 text-sm text-red-600">{{ formatFieldName(field) }} is required</p>
+                  <p *ngIf="verificationForm.get(field)?.touched && verificationForm.get(field)?.errors?.['minlength']" class="mt-1 text-sm text-red-600">Description must exceed 70 characters</p>
+                  <p *ngIf="verificationForm.get(field)?.touched && verificationForm.get(field)?.errors?.['maxlength']" class="mt-1 text-sm text-red-600">{{ formatFieldName(field) }} must not exceed 100 characters</p>
+                  <p *ngIf="verificationForm.get(field)?.touched && verificationForm.get(field)?.errors?.['email']" class="mt-1 text-sm text-red-600">Invalid email format</p>
+                  <p *ngIf="verificationForm.get(field)?.errors?.['serverError']" class="mt-1 text-sm text-red-600">{{ verificationForm.get(field)?.errors?.['serverError'] }}</p>
                 </div>
               </div>
               <div class="flex justify-end mt-8">
-                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed">
-                  Submit for Verification
-                </button>
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed">Submit for Verification</button>
               </div>
             </form>
-            <div *ngIf="verificationError.general" class="mt-4 text-red-600 text-center p-2 bg-red-100 rounded">
-              {{ verificationError.general }}
-            </div>
-            <div *ngIf="verificationSuccess" class="mt-4 text-green-600 text-center p-2 bg-green-100 rounded">
-              {{ verificationSuccess }}
-            </div>
+            <div *ngIf="verificationError.general" class="mt-4 text-red-600 text-center p-2 bg-red-100 rounded">{{ verificationError.general }}</div>
+            <div *ngIf="verificationSuccess" class="mt-4 text-green-600 text-center p-2 bg-green-100 rounded">{{ verificationSuccess }}</div>
           </div>
 
           <!-- Verified Profile Display -->
-          <div *ngIf="isVerified && organizationProfile" class="bg-white p-8 rounded-lg shadow-md">
-            <h3 class="text-2xl font-semibold mb-4 text-indigo-700">Verified Organization Profile</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div *ngFor="let field of ['organizationName', 'typeOfInstitution', 'description', 'facilityCity', 'facilityAddress', 'phoneNumber', 'schedule', 'website', 'facilityEmailAddress']" class="flex flex-col">
-                <span class="font-semibold text-gray-700">{{ formatFieldName(field) }}:</span>
-                <span class="text-gray-600">{{ organizationProfile[field] }}</span>
-              </div>
+          <div *ngIf="isVerified && !verificationError.general" class="bg-green-100 p-6 rounded-lg shadow-md flex items-center">
+            <i class="fas fa-check-circle text-green-600 text-4xl mr-4"></i>
+            <div>
+              <h3 class="text-2xl font-semibold text-green-800">Verification Successful!</h3>
+              <p class="text-green-700">Your profile is now verified and you are ready to work.</p>
             </div>
+          </div>
+        </div>
+        <!-- Settings Section -->
+        <div *ngIf="activeSection === 'settings'" class="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-lg shadow-lg">
+          <h2 class="text-3xl font-semibold mb-6 text-indigo-800">Settings</h2>
+          <div class="settings-section">
+            <h3 class="text-2xl font-semibold mb-4">Profile Image</h3>
+            <div class="flex items-center">
+              <img *ngIf="organizationProfile?.['profileImage']" [src]="profileImageUrl" alt="Profile Image" class="w-32 h-32 rounded-full mr-4">
+              <input type="file" (change)="onFileChange($event)" accept="image/*" class="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out">
+            </div>
+            <button (click)="uploadImage()" class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed">
+              Upload Image
+            </button>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Settings Section -->
-    <div *ngIf="activeSection === 'settings'" class="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-lg shadow-lg">
-      <h2 class="text-3xl font-semibold mb-6 text-indigo-800">Settings</h2>
-      <div class="settings-section">
-        <h3 class="text-2xl font-semibold mb-4">Profile Image</h3>
-        <div class="flex items-center">
-          <img *ngIf="organizationProfile?.['profileImage']" [src]="profileImageUrl" alt="Profile Image" class="w-32 h-32 rounded-full mr-4">
-          <input type="file" (change)="onFileChange($event)" accept="image/*" class="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out">
-        </div>
-        <button (click)="uploadImage()" class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed">
-          Upload Image
-        </button>
-      </div>
-    </div>
   </div>
+  <div class="footer-space"></div>
 </div>

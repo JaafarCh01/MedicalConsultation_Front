@@ -35,3 +35,7 @@ nav a:hover {
 .mb-16 {
   margin-bottom: 0rem; /* Adjust this value to provide space for the footer */
 }
+
+.footer-space {
+  height: 0.3rem; /* Adjust this value to match the footer height */
+}

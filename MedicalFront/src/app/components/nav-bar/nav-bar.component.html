@@ -15,10 +15,22 @@
     </div>
     <div class="hidden lg:flex lg:gap-x-8">
       <a routerLink="/" class="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-600">Home</a>
+      <div *ngIf="isLoggedIn" class="relative">
+        <button (click)="toggleMoreDropdown()" class="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-600">
+          More
+        </button>
+        <div class="dropdown-menu" [ngClass]="{'hidden': !isMoreDropdownOpen}">
+          <a routerLink="/about" class="block px-4 py-2 hover:bg-gray-100">About</a>
+          <a routerLink="/contact" class="block px-4 py-2 hover:bg-gray-100">Contact</a>
+        </div>
+      </div>
       <a routerLink="/about" class="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-600">About</a>
+      <a routerLink="/contact" class="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-600">Contact</a>
       <a *ngIf="isLoggedIn" routerLink="/docs" class="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-600">Doctors</a>
       <a routerLink="/articles" class="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-600">Articles</a>
-      <a routerLink="/contact" class="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-600">Contact</a>
+      <a *ngIf="isLoggedIn" routerLink="/questions" class="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-600">
+        Consultations
+      </a>
       <a *ngIf="isLoggedIn" routerLink="/organizations" routerLinkActive="active" class="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-600">Organizations</a>
     </div>
     <div class="flex items-center">
